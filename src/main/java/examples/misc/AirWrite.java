@@ -71,7 +71,7 @@ public class AirWrite extends Application {
 
         colorStrategy = new ColorStrategy(Color.BLACK);
 
-        colorFilter = new ColoredPointSearch(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
+        colorFilter = new ColoredPointSearch(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight(), Color.BLACK);
         colorFilter.setBorder(95);
         colorFilter.setPixelStrategy(colorStrategy);
 

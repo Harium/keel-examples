@@ -1,12 +1,5 @@
 package examples.medium.application;
 
-import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.ColorFilter;
-import com.harium.keel.filter.validation.MinDensityValidation;
-import com.harium.keel.filter.validation.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -14,6 +7,13 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.PolygonHelper;
+import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.feature.Component;
+import com.harium.keel.filter.ColorFilter;
+import com.harium.keel.filter.validation.MinDensityValidation;
+import com.harium.keel.filter.validation.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -62,13 +62,10 @@ public class TrackingShadingColorApplication extends Application {
         dimensionValidation = new MinDimensionValidation(minDimension);
 
         blueFilter = new ColorFilter(screen.getW(), screen.getH(), color, tolerance);
-        blueFilter.getSearchStrategy().addValidation(dimensionValidation);
-        blueFilter.getSearchStrategy().addValidation(densityValidation);
-
-        final int MAGIC_NUMBER = 3;//Higher = Faster and less precise
-
-        blueFilter.getSearchStrategy().setBorder(MAGIC_NUMBER);
-        blueFilter.getSearchStrategy().setStep(2);
+        blueFilter.addValidation(dimensionValidation);
+        blueFilter.addValidation(densityValidation);
+        blueFilter.setBorder(3);
+        blueFilter.setStep(2);
 
         loadingInfo = "Configuring Filter";
 

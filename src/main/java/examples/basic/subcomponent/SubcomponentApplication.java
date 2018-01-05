@@ -1,5 +1,9 @@
 package examples.basic.subcomponent;
 
+import com.harium.etyl.awt.AWTGraphics;
+import com.harium.etyl.commons.context.Application;
+import com.harium.etyl.commons.graphics.Color;
+import com.harium.etyl.core.graphics.Graphics;
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.Component;
@@ -7,10 +11,6 @@ import com.harium.keel.feature.hull.HullComponent;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.filter.validation.MaxDimensionValidation;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
-import com.harium.etyl.awt.AWTGraphics;
-import com.harium.etyl.commons.context.Application;
-import com.harium.etyl.commons.graphics.Color;
-import com.harium.etyl.core.graphics.Graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -53,7 +53,7 @@ public class SubcomponentApplication extends Application {
 
         //Define white and black filters
         whiteFilter = new ColorFilter(w, h, Color.WHITE);
-        whiteFilter.getSearchStrategy().addValidation(new MaxDimensionValidation(w / 2));
+        whiteFilter.addValidation(new MaxDimensionValidation(w / 2));
 
         blackFilter = new ColorFilter(w, h, Color.BLACK);
 

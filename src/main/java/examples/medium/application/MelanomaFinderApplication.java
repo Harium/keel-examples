@@ -8,7 +8,7 @@ import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.Component;
 import com.harium.keel.feature.hull.HullComponent;
-import com.harium.keel.filter.TrackingByDarkerColorFilter;
+import com.harium.keel.filter.track.TrackingByDarkerColorFilter;
 import com.harium.keel.filter.process.AverageColorFilter;
 import com.harium.keel.filter.validation.MaxDimensionValidation;
 import com.harium.keel.filter.validation.MinDensityValidation;

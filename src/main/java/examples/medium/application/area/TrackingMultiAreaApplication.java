@@ -86,13 +86,12 @@ public class TrackingMultiAreaApplication extends Application {
         maxDimensionValidation = new MaxDimensionValidation(maxDimension);
 
         orangeFilter = setupFilter(orangeColor);
-        orangeFilter.getSearchStrategy().addValidation(minDimensionValidation);
-        orangeFilter.getSearchStrategy().addValidation(densityValidation);
-        SoftFloodFillSearch search = (SoftFloodFillSearch) (orangeFilter.getSearchStrategy());
-        search.setMinNeighbors(7);
+        orangeFilter.addValidation(minDimensionValidation);
+        orangeFilter.addValidation(densityValidation);
+        orangeFilter.setMinNeighbors(7);
 
         blueFilter = setupFilter(blueColor);
-        blueFilter.getSearchStrategy().addValidation(minDimensionValidation);
+        blueFilter.addValidation(minDimensionValidation);
 
         loadingInfo = "Configuring Filter";
 
@@ -118,12 +117,10 @@ public class TrackingMultiAreaApplication extends Application {
     }
 
     private ColorFilter setupFilter(Color color) {
-        final int MAGIC_NUMBER = 3;//Higher = Faster and less precise
-
         ColorFilter filter = new ColorFilter(screen.getW(), screen.getH(), color, tolerance);
-        filter.getSearchStrategy().setBorder(MAGIC_NUMBER);
-        filter.getSearchStrategy().setStep(2);
-        filter.getSearchStrategy().addValidation(maxDimensionValidation);
+        filter.setBorder(3);
+        filter.setStep(2);
+        filter.addValidation(maxDimensionValidation);
 
         return filter;
     }

@@ -39,7 +39,7 @@ public class BarCodeExample extends Application {
 
         screen = new Component(0, 0, w, h);
 
-        filter.setBorder(2);
+        filter.getSearchStrategy().setBorder(2);
 
         loadingInfo = "Loading Images";
 

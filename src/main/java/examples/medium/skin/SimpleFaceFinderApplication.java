@@ -1,17 +1,5 @@
 package examples.medium.skin;
 
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.core.strategy.SearchFilter;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.ExpandableColorFilter;
-import com.harium.keel.filter.HardColorFilter;
-import com.harium.keel.filter.SkinColorFilter;
-import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
-import com.harium.keel.filter.process.AverageColorFilter;
-import com.harium.keel.filter.validation.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -19,6 +7,18 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.camera.Camera;
+import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.core.Filter;
+import com.harium.keel.core.helper.ColorHelper;
+import com.harium.keel.feature.Component;
+import com.harium.keel.filter.ExpandableColorFilter;
+import com.harium.keel.filter.HardColorFilter;
+import com.harium.keel.filter.SkinColorFilter;
+import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
+import com.harium.keel.filter.process.AverageColorFilter;
+import com.harium.keel.filter.validation.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.*;
@@ -124,7 +124,7 @@ public class SimpleFaceFinderApplication extends Application {
         skinFilter = new SkinColorFilter(w, h, new SkinColorKovacNewStrategy());
         HardColorFilter colorFilter = new HardColorFilter(w, h, new Color(40, 40, 40), 25);
 
-        SearchFilter filter = skinFilter.getSearchStrategy();
+        Filter filter = skinFilter.getSearchStrategy();
         filter.setStep(2);
         filter.setBorder(20);
 
@@ -219,7 +219,7 @@ public class SimpleFaceFinderApplication extends Application {
 
         //Draw dark components
         /*g.setStroke(new BasicStroke(3f));
-		g.setColor(Color.BLACK);
+        g.setColor(Color.BLACK);
 
 		for(Component component:darkComponents) {
 			g.drawRect(component.getRectangle());

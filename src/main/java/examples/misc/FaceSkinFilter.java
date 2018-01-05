@@ -4,7 +4,7 @@ import com.harium.keel.awt.camera.Camera;
 import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.Component;
-import com.harium.keel.filter.TrackingByMultipleColorFilter;
+import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
 import com.harium.keel.filter.validation.MinCountPoints;
 import com.harium.keel.filter.validation.MinDensityValidation;
 import com.harium.keel.filter.validation.MinDimensionValidation;

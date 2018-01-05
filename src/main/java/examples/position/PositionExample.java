@@ -18,8 +18,6 @@ public class PositionExample extends Etyl {
     }
 
     public Application startApplication() {
-        initialSetup("../");
-
         return new SphereApplication(w, h);
     }
 

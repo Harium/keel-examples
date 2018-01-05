@@ -67,15 +67,15 @@ public class TrackingCameraColorApplication extends Application {
         dimensionValidation = new MinDimensionValidation(minDimension);
 
         blueFilter = new ColorFilter(screen.getW(), screen.getH(), color, tolerance);
-        blueFilter.getSearchStrategy().addValidation(dimensionValidation);
-        blueFilter.getSearchStrategy().addValidation(new MaxDimensionValidation(maxDimension));
+        blueFilter.addValidation(dimensionValidation);
+        blueFilter.addValidation(new MaxDimensionValidation(maxDimension));
 
-        blueFilter.getSearchStrategy().addValidation(densityValidation);
+        blueFilter.addValidation(densityValidation);
 
         final int MAGIC_NUMBER = 3;//Higher = Faster and less precise
 
-        blueFilter.getSearchStrategy().setBorder(MAGIC_NUMBER);
-        blueFilter.getSearchStrategy().setStep(2);
+        blueFilter.setBorder(MAGIC_NUMBER);
+        blueFilter.setStep(2);
 
         loadingInfo = "Configuring Filter";
 

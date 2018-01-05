@@ -3,8 +3,8 @@ package examples.medium.skin;
 import com.harium.keel.awt.camera.Camera;
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.core.Filter;
 import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.core.strategy.SearchFilter;
 import com.harium.keel.feature.Component;
 import com.harium.keel.filter.SkinColorFilter;
 import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
@@ -117,7 +117,7 @@ public class SimpleSkinStrategyApplication extends Application {
         screen = new Component(0, 0, w, h);
         skinFilter = new SkinColorFilter(w, h, new SkinColorKovacNewStrategy());
 
-        SearchFilter filter = skinFilter.getSearchStrategy();
+        Filter filter = skinFilter.getSearchStrategy();
         filter.setStep(2);
         filter.setBorder(4);
 

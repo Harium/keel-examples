@@ -3,7 +3,7 @@ package examples.hard.face;
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.Component;
-import com.harium.keel.filter.TrackingByMultipleColorFilter;
+import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
 import com.harium.keel.awt.image.filter.ContrastQuickFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
