@@ -10,7 +10,7 @@ import com.harium.etyl.linear.Point2D;
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.filter.validation.MinDensityValidation;
 import com.harium.keel.filter.validation.MinDimensionValidation;
@@ -43,9 +43,9 @@ public class TrackingShadingColorApplication extends Application {
     private int xOffset = 0;
     private int yOffset = 0;
 
-    private Component screen;
+    private PointFeature screen;
 
-    private List<Component> blueComponents;
+    private List<PointFeature> bluePointFeatures;
 
     public TrackingShadingColorApplication(int w, int h) {
         super(w, h);
@@ -75,7 +75,7 @@ public class TrackingShadingColorApplication extends Application {
         loading = 100;
     }
 
-    protected Component setupCamera() {
+    protected PointFeature setupCamera() {
         cam = new FakeCamera();
 
         for (int i = 1; i <= 3; i++) {
@@ -85,7 +85,7 @@ public class TrackingShadingColorApplication extends Application {
         int w = cam.getBufferedImage().getWidth();
         int h = cam.getBufferedImage().getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new PointFeature(0, 0, w, h);
 
         return screen;
     }
@@ -97,16 +97,16 @@ public class TrackingShadingColorApplication extends Application {
     private void reset(BufferedImage b) {
         source.setImage(b);
 
-        blueComponents = blueFilter.filter(source, screen);
+        bluePointFeatures = blueFilter.filter(source, screen);
 
-        if (!blueComponents.isEmpty()) {
+        if (!bluePointFeatures.isEmpty()) {
 
             bx = 0;
             by = 0;
 
             bRadius = 0;
 
-            for (Component component : blueComponents) {
+            for (PointFeature component : bluePointFeatures) {
                 Point2D p = component.getCenter();
                 bx += p.getX();
                 by += p.getY();
@@ -114,10 +114,10 @@ public class TrackingShadingColorApplication extends Application {
                 bRadius += (component.getW() + component.getH()) / 4;
             }
 
-            bx /= blueComponents.size();
-            by /= blueComponents.size();
+            bx /= bluePointFeatures.size();
+            by /= bluePointFeatures.size();
 
-            bRadius /= blueComponents.size();
+            bRadius /= bluePointFeatures.size();
 
             return;
         }
@@ -212,8 +212,8 @@ public class TrackingShadingColorApplication extends Application {
 
             g.setColor(Color.GREEN);
 
-            if (blueComponents != null) {
-                for (Component component : blueComponents) {
+            if (bluePointFeatures != null) {
+                for (PointFeature component : bluePointFeatures) {
                     g.drawPolygon(PolygonHelper.getBoundingBox(component));
                     g.drawString(Double.toString(component.getDensity()), component.getRectangle());
 

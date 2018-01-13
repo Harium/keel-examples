@@ -4,7 +4,8 @@ package examples.basic.circle;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.classifier.CircleClassifier;
 import com.harium.keel.core.source.ImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.etyl.awt.AWTGraphics;
 import com.harium.etyl.commons.context.Application;
@@ -23,8 +24,8 @@ public class CircleApplication extends Application {
 
     BufferedImage drawing;
 
-    List<Component> components;
-    Set<Component> circle = new HashSet<>();
+    List<PointFeature> components;
+    Set<PointFeature> circle = new HashSet<>();
 
     public CircleApplication(int w, int h) {
         super(w, h);
@@ -36,14 +37,14 @@ public class CircleApplication extends Application {
         drawScreen(drawing);
 
         ImageSource source = new BufferedImageSource(drawing);
-        Component screen = new Component(w, h);
+        Feature screen = new Feature(w, h);
 
         colorFilter = new ColorFilter(w, h, color);
         components = colorFilter.filter(source, screen);
 
         CircleClassifier classifier = new CircleClassifier();
 
-        for (Component component : components) {
+        for (PointFeature component : components) {
             if (classifier.classify(component)) {
                 circle.add(component);
             }
@@ -66,7 +67,7 @@ public class CircleApplication extends Application {
     public void draw(Graphics g) {
         g.drawImage(drawing, 0, 0);
 
-        for (Component component : components) {
+        for (PointFeature component : components) {
             if (!circle.contains(component)) {
                 g.setColor(Color.RED);
             } else {

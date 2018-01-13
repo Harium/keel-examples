@@ -1,12 +1,5 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.core.gesture.GestureRegex;
-import com.harium.keel.core.gesture.PolygonMatcher;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.color.ColorStrategy;
-import com.harium.keel.filter.search.ColoredPointSearch;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -14,6 +7,14 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.camera.CameraV4L4J;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.custom.gesture.GestureRegex;
+import com.harium.keel.custom.gesture.PolygonMatcher;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.color.RGBColorStrategy;
+import com.harium.keel.filter.search.ColoredPointSearch;
 
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -28,7 +29,7 @@ public class AirWrite extends Application {
 
     private ColoredPointSearch colorFilter;
 
-    private ColorStrategy colorStrategy;
+    private RGBColorStrategy colorStrategy;
 
     private final int NUMBER_OF_POINTS = 45;
 
@@ -43,7 +44,7 @@ public class AirWrite extends Application {
 
     private String match = "_";
 
-    private Component component = new Component((int) w, (int) h);
+    private PointFeature component = new PointFeature((int) w, (int) h);
 
     private PolygonMatcher matcher = new PolygonMatcher();
 
@@ -53,7 +54,7 @@ public class AirWrite extends Application {
         super(w, h);
     }
 
-    private Component screen;
+    private Feature screen;
 
     @Override
     public void load() {
@@ -62,18 +63,18 @@ public class AirWrite extends Application {
 
         cam = new CameraV4L4J(0);
 
-        screen = new Component(0, 0, cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
+        screen = new Feature(0, 0, cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
 
         loadingInfo = "Setting PolygonMatcher";
         matcher.setMinDistance(8);
 
         loadingInfo = "Setting Filter";
 
-        colorStrategy = new ColorStrategy(Color.BLACK);
+        colorStrategy = new RGBColorStrategy(Color.BLACK);
 
         colorFilter = new ColoredPointSearch(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight(), Color.BLACK);
         colorFilter.setBorder(95);
-        colorFilter.setPixelStrategy(colorStrategy);
+        colorFilter.setSelectionStrategy(colorStrategy);
 
         points = component.getPoints();
 
@@ -87,7 +88,7 @@ public class AirWrite extends Application {
     private void reset(BufferedImage b) {
         source.setImage(b);
 
-        Component point = colorFilter.filterFirst(source, screen);
+        PointFeature point = colorFilter.filterFirst(source, screen);
 
         if (!freeze) {
 
@@ -106,7 +107,7 @@ public class AirWrite extends Application {
     @Override
     public void updateMouse(PointerEvent event) {
         if (event.isButtonUp(MouseEvent.MOUSE_BUTTON_LEFT)) {
-            colorStrategy.setColor(mirror.getRGB((int) event.getX(), (int) event.getY()));
+            colorStrategy.setColor(mirror.getRGB(event.getX(), event.getY()));
         }
     }
 

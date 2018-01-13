@@ -5,12 +5,10 @@ import com.harium.keel.awt.camera.Camera;
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.filter.search.flood.SoftFloodFillSearch;
-import com.harium.keel.filter.validation.MaxDimensionValidation;
-import com.harium.keel.filter.validation.MinDensityValidation;
-import com.harium.keel.filter.validation.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -18,6 +16,9 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.filter.validation.point.MaxDimensionValidation;
+import com.harium.keel.filter.validation.point.MinDensityValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -56,19 +57,19 @@ public class TrackingMultiAreaApplication extends Application {
     private int xOffset = 0;
     private int yOffset = 0;
 
-    protected Component screen;
+    protected Feature screen;
 
     //Area Stuff
-    private boolean foundTwoComponents = false;
+    private boolean foundTwoPointFeatures = false;
     private int areaOver = -1;
 
-    private Component c1 = null, c2 = null;
+    private PointFeature c1 = null, c2 = null;
     private double densityC1 = 0;
     private double densityC2 = 0;
     private static final int minCollisionCount = 80;
 
-    private List<Component> orangeComponents;
-    private List<Component> blueComponents;
+    private List<PointFeature> orangePointFeatures;
+    private List<PointFeature> bluePointFeatures;
 
     public TrackingMultiAreaApplication(int w, int h) {
         super(w, h);
@@ -101,7 +102,7 @@ public class TrackingMultiAreaApplication extends Application {
         loading = 100;
     }
 
-    protected Component setupCamera() {
+    protected Feature setupCamera() {
         cam = new FakeCamera();
 
 		/*cam.addImage("dumbbells/dumbbells1.png");
@@ -111,13 +112,13 @@ public class TrackingMultiAreaApplication extends Application {
         int w = cam.getBufferedImage().getWidth();
         int h = cam.getBufferedImage().getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new Feature(w, h);
 
         return screen;
     }
 
     private ColorFilter setupFilter(Color color) {
-        ColorFilter filter = new ColorFilter(screen.getW(), screen.getH(), color, tolerance);
+        ColorFilter filter = new ColorFilter(screen.getWidth(), screen.getHeight(), color, tolerance);
         filter.setBorder(3);
         filter.setStep(2);
         filter.addValidation(maxDimensionValidation);
@@ -128,20 +129,20 @@ public class TrackingMultiAreaApplication extends Application {
     protected void reset(BufferedImage b) {
         source.setImage(b);
 
-        orangeComponents = orangeFilter.filter(source, screen);
-        blueComponents = blueFilter.filter(source, screen);
+        orangePointFeatures = orangeFilter.filter(source, screen);
+        bluePointFeatures = blueFilter.filter(source, screen);
 
-        if (!orangeComponents.isEmpty()) {
+        if (!orangePointFeatures.isEmpty()) {
             evaluateDensity(b);
         }
 
-        if (foundTwoComponents) {
+        if (foundTwoPointFeatures) {
 
             area.generateArea(c1.getCenter(), c2.getCenter());
             areaOver = -1;
 
             //Verify Collisions
-            for (Component component : blueComponents) {
+            for (PointFeature component : bluePointFeatures) {
                 for (int i = 0; i < area.getAreas(); i++) {
 
                     int count = 0;
@@ -170,7 +171,7 @@ public class TrackingMultiAreaApplication extends Application {
 
         int found = 0;
 
-        for (Component component : orangeComponents) {
+        for (PointFeature component : orangePointFeatures) {
 
             if (nonSquared(component) || !hasCenterColor(component, b)) {
                 continue;
@@ -191,14 +192,14 @@ public class TrackingMultiAreaApplication extends Application {
             }
         }
 
-        foundTwoComponents = found >= 2;
+        foundTwoPointFeatures = found >= 2;
     }
 
-    private boolean nonSquared(Component component) {
+    private boolean nonSquared(PointFeature component) {
         return component.getW() > component.getH() * 1.5;
     }
 
-    private boolean hasCenterColor(Component component, BufferedImage b) {
+    private boolean hasCenterColor(PointFeature component, BufferedImage b) {
         Point2D center = component.getCenter();
         int rgb = b.getRGB((int) center.getX(), (int) center.getY());
         return ColorHelper.isColor(orangeFilter.getColor(), rgb, 8);
@@ -306,16 +307,16 @@ public class TrackingMultiAreaApplication extends Application {
 
             g.setColor(Color.ORANGE);
 
-            //Draw OrangeComponents
-            if (orangeComponents != null) {
-                for (Component component : orangeComponents) {
+            //Draw OrangePointFeatures
+            if (orangePointFeatures != null) {
+                for (PointFeature component : orangePointFeatures) {
                     g.drawPolygon(PolygonHelper.getBoundingBox(component));
                     g.drawStringShadow(component.getW() + "x" + component.getH(), component.getRectangle());
                     g.drawStringShadow(Double.toString(component.getDensity()), component.getX(), component.getY() + 25, component.getW(), component.getH());
                 }
             }
 
-            if (foundTwoComponents) {
+            if (foundTwoPointFeatures) {
 
                 //Draw Areas
                 g.setAlpha(50);
@@ -342,8 +343,8 @@ public class TrackingMultiAreaApplication extends Application {
             if (areaOver >= 0)
                 g.drawStringShadowX(Integer.toString(areaOver + 1), 300);
 
-            if (blueComponents != null) {
-                for (Component component : blueComponents) {
+            if (bluePointFeatures != null) {
+                for (PointFeature component : bluePointFeatures) {
                     g.drawPolygon(PolygonHelper.getBoundingBox(component));
                 }
             }

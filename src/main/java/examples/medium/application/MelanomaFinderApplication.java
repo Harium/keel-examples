@@ -6,13 +6,13 @@ import java.util.List;
 
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
-import com.harium.keel.feature.hull.HullComponent;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.feature.hull.HullFeature;
 import com.harium.keel.filter.track.TrackingByDarkerColorFilter;
 import com.harium.keel.filter.process.AverageColorFilter;
-import com.harium.keel.filter.validation.MaxDimensionValidation;
-import com.harium.keel.filter.validation.MinDensityValidation;
-import com.harium.keel.filter.validation.MinDimensionValidation;
+import com.harium.keel.filter.validation.point.MaxDimensionValidation;
+import com.harium.keel.filter.validation.point.MinDensityValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
@@ -28,20 +28,20 @@ public class MelanomaFinderApplication extends Application {
 
 	private TrackingByDarkerColorFilter skinFilter;
 
-	private Component screen;
+	private PointFeature screen;
 
-	private Component biggestComponent;
+	private PointFeature biggestPointFeature;
 
-	private List<Component> candidates;
+	private List<PointFeature> candidates;
 	private List<Point2D> list;
 
 	private Color averageSkinColor;
 
-	private HullComponent convexHull;
+	private HullFeature convexHull;
 
 	private boolean hide = false;
 		
-	private Color avgBiggestComponentColor;
+	private Color avgBiggestPointFeatureColor;
 
 	public MelanomaFinderApplication(int w, int h) {
 		super(w, h);
@@ -63,15 +63,15 @@ public class MelanomaFinderApplication extends Application {
 		int height = buffer.getHeight();
 
 		//Define the area to search for elements
-		screen = new Component(0, 0, width, height);
+		screen = new PointFeature(0, 0, width, height);
 
 		//Define skin filter
 		skinFilter = new TrackingByDarkerColorFilter(w, h, averageSkinColor, 80);
 
 		//Define validations
-		skinFilter.addValidation(new MinDensityValidation(50)); //Components must have at least 50% of pixel density  
-		skinFilter.addValidation(new MinDimensionValidation(20)); //Components should be bigger than 20x20px 
-		skinFilter.addValidation(new MaxDimensionValidation(width/2)); //Components should be smaller than (width/2)x(width/2)px
+		skinFilter.addValidation(new MinDensityValidation(50)); //PointFeatures must have at least 50% of pixel density
+		skinFilter.addValidation(new MinDimensionValidation(20)); //PointFeatures should be bigger than 20x20px
+		skinFilter.addValidation(new MaxDimensionValidation(width/2)); //PointFeatures should be smaller than (width/2)x(width/2)px
 
 		loading = 80;
 
@@ -81,40 +81,40 @@ public class MelanomaFinderApplication extends Application {
 		candidates = skinFilter.filter(source, screen);
 
 		//Find the biggest component/candidate
-		biggestComponent = findBiggestComponent(candidates);
+		biggestPointFeature = findBiggestPointFeature(candidates);
 
 		FastConvexHullModifier convexHullModifier = new FastConvexHullModifier();
 
 		//Apply QuickHull Modifier in the biggest component
-		convexHull = convexHullModifier.modify(biggestComponent);
+		convexHull = convexHullModifier.modify(biggestPointFeature);
 		list = convexHull.asList();
 		
 		//Creates a new avgColorFilter
 		avgColorFilter = new AverageColorFilter();
 		
 		//Calculate melonama's average color
-		avgBiggestComponentColor = avgColorFilter.process(source, biggestComponent);
+		avgBiggestPointFeatureColor = avgColorFilter.process(source, biggestPointFeature);
 		
 		loadingInfo = "Filter Complete";
 	}
 
-	private Component findBiggestComponent(List<Component> components) {
+	private PointFeature findBiggestPointFeature(List<PointFeature> components) {
 
-		Component biggestComponent = candidates.get(0);
+		PointFeature biggestPointFeature = candidates.get(0);
 
 		int biggestArea = 0;
 
 		for(int i=0;i<candidates.size(); i++) {
 
-			Component candidate = candidates.get(i);
+			PointFeature candidate = candidates.get(i);
 
 			if(candidate.getArea() > biggestArea) {
-				biggestComponent = candidate;
+				biggestPointFeature = candidate;
 				biggestArea = candidate.getArea();
 			}
 		}
 
-		return biggestComponent;
+		return biggestPointFeature;
 	}
 
 	@Override
@@ -125,25 +125,25 @@ public class MelanomaFinderApplication extends Application {
 		g.setAlpha(50);
 
 		//Draw a black rectangle around the skin components
-		for(Component candidate : candidates) {
+		for(PointFeature candidate : candidates) {
 			g.setStroke(new BasicStroke(3f));
 			g.setColor(Color.BLACK);
 			g.drawPolygon(PolygonHelper.getBoundingBox(candidate));
 
 			if(!hide){
-				drawComponentPixels(g, candidate);	
+				drawPointFeaturePixels(g, candidate);
 			}
 		}
 		
-		//Draw Biggest Component
+		//Draw Biggest PointFeature
 		g.setColor(Color.BLUE);
-		g.drawPolygon(PolygonHelper.getBoundingBox(biggestComponent));
+		g.drawPolygon(PolygonHelper.getBoundingBox(biggestPointFeature));
 
 		if(!hide) {
 			g.setAlpha(50);
 
-			drawComponentPixels(g, biggestComponent);
-			drawConvexHullMask(g, biggestComponent);
+			drawPointFeaturePixels(g, biggestPointFeature);
+			drawConvexHullMask(g, biggestPointFeature);
 		}
 		
 		g.setAlpha(100);
@@ -158,7 +158,7 @@ public class MelanomaFinderApplication extends Application {
 		g.drawStringShadow("← avg skin color", 45, 60);
 		
 		//Draw average melanoma color rectangle
-		g.setColor(avgBiggestComponentColor);
+		g.setColor(avgBiggestPointFeatureColor);
 		g.fillRect(0, 86, 40, 30);
 		
 		g.setColor(Color.WHITE);
@@ -169,14 +169,14 @@ public class MelanomaFinderApplication extends Application {
 
 	}
 
-	private void drawComponentPixels(Graphics g, Component component) {
+	private void drawPointFeaturePixels(Graphics g, PointFeature component) {
 
 		for(Point2D point: component.getPoints()) {
 			g.fillRect((int)point.getX(), (int)point.getY(), 1, 1);
 		}
 	}
 
-	private void drawConvexHullMask(Graphics g, Component component) {
+	private void drawConvexHullMask(Graphics g, PointFeature component) {
 
 		Point2D centroid = component.getCenter();
 

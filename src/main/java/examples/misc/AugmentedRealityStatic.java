@@ -1,18 +1,20 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.core.strategy.ComponentModifierStrategy;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.color.ColorStrategy;
-import com.harium.keel.filter.search.CornerSearch;
-import com.harium.keel.modifier.PositCoplanarModifier;
-import com.harium.keel.modifier.hull.AugmentedMarkerModifier;
+import com.badlogic.gdx.math.Quaternion;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.core.strategy.ComponentModifierStrategy;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.color.RGBColorStrategy;
+import com.harium.keel.filter.search.CornerSearch;
+import com.harium.keel.modifier.PositCoplanarModifier;
+import com.harium.keel.modifier.hull.AugmentedMarkerModifier;
 
 import java.awt.image.BufferedImage;
 
@@ -23,7 +25,7 @@ public class AugmentedRealityStatic extends Application {
 
     private CornerSearch cornerFilter;
 
-    private ColorStrategy colorStrategy;
+    private RGBColorStrategy colorStrategy;
 
     private ComponentModifierStrategy modifier;
 
@@ -35,7 +37,7 @@ public class AugmentedRealityStatic extends Application {
     private int xOffset = 40;
     private int yOffset = 40;
 
-    private Component feature;
+    private PointFeature feature;
 
     public AugmentedRealityStatic(int w, int h) {
         super(w, h);
@@ -64,7 +66,7 @@ public class AugmentedRealityStatic extends Application {
 
         loading = 40;
 
-        colorStrategy = new ColorStrategy(Color.BLACK);
+        colorStrategy = new RGBColorStrategy(Color.BLACK);
         colorStrategy.setTolerance(0x30);
 
         modifier = new AugmentedMarkerModifier();
@@ -78,11 +80,11 @@ public class AugmentedRealityStatic extends Application {
         cornerFilter.setBorder(10);
         cornerFilter.setStep(1);
 
-        cornerFilter.setPixelStrategy(colorStrategy);
+        cornerFilter.setSelectionStrategy(colorStrategy);
 
         cornerFilter.setComponentModifierStrategy(modifier);
 
-        feature = new Component(0, 0, w, h);
+        feature = new PointFeature(0, 0, w, h);
 
         reset(cam.getBufferedImage());
 
@@ -96,7 +98,7 @@ public class AugmentedRealityStatic extends Application {
         loadingInfo = "Start Filter";
 
         source.setImage(b);
-        feature = cornerFilter.filterFirst(source, new Component(0, 0, w, h));
+        feature = cornerFilter.filterFirst(source, new Feature(w, h));
 
         positModifier.modifyComponent(feature);
 
@@ -146,19 +148,16 @@ public class AugmentedRealityStatic extends Application {
 
             g.drawString("Points = " + feature.getPoints().size(), 50, textHeight + 25);
 
-            g.drawString("Angle = " + positModifier.getAxis().getAngle(), 50, textHeight + 50);
-
-            g.drawString("AxisX = " + positModifier.getAxis().getRotationX(), 50, textHeight + 75);
-
-            g.drawString("AxisY = " + positModifier.getAxis().getRotationY(), 50, textHeight + 100);
-
-            g.drawString("AxisZ = " + positModifier.getAxis().getRotationZ(), 50, textHeight + 125);
+            Quaternion quaternion = positModifier.getAxis().calculateQuaternion();
+            g.drawString("Pitch = " + quaternion.getPitch(), 50, textHeight + 50);
+            g.drawString("Yaw = " + quaternion.getYaw(), 50, textHeight + 75);
+            g.drawString("Roll = " + quaternion.getRoll(), 50, textHeight + 100);
 
         }
 
     }
 
-    private void drawBox(Graphics g, Component box) {
+    private void drawBox(Graphics g, PointFeature box) {
 
         g.setColor(Color.RED);
 

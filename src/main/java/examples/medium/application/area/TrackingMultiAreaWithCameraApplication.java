@@ -3,7 +3,7 @@ package examples.medium.application.area;
 import java.awt.image.BufferedImage;
 
 import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.layer.BufferedLayer;
 
@@ -17,14 +17,14 @@ public class TrackingMultiAreaWithCameraApplication extends TrackingMultiAreaApp
 	}
 
 	@Override
-	protected Component setupCamera() {
+	protected PointFeature setupCamera() {
 		//cam = new CameraSarxosWebcam(0);
 		cam = new CameraV4L4J(0);
 
 		int w = cam.getBufferedImage().getWidth();
 		int h = cam.getBufferedImage().getHeight();
 
-		screen = new Component(0, 0, w, h);
+		screen = new PointFeature(0, 0, w, h);
 		layer = new BufferedLayer(w, h);
 
 		return screen;

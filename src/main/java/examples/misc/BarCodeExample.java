@@ -3,7 +3,7 @@ package examples.misc;
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.custom.BarCodeFilter;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.core.graphics.Graphics;
@@ -26,9 +26,9 @@ public class BarCodeExample extends Application {
     private int xOffset = 40;
     private int yOffset = 40;
 
-    private List<Component> result;
+    private List<PointFeature> result;
 
-    private Component screen;
+    private PointFeature screen;
 
     public BarCodeExample(int w, int h) {
         super(w, h);
@@ -37,7 +37,7 @@ public class BarCodeExample extends Application {
     @Override
     public void load() {
 
-        screen = new Component(0, 0, w, h);
+        screen = new PointFeature(0, 0, w, h);
 
         filter.getSearchStrategy().setBorder(2);
 
@@ -97,7 +97,7 @@ public class BarCodeExample extends Application {
         g.drawImage(cam.getBufferedImage(), xOffset, yOffset + 200);
 
         int offset = 1;
-        for (Component feature : result) {
+        for (PointFeature feature : result) {
 
             drawBox(g, feature, offset % 2 * 20);
 
@@ -107,7 +107,7 @@ public class BarCodeExample extends Application {
 
     }
 
-    private void drawBox(Graphics g, Component box, int downOffset) {
+    private void drawBox(Graphics g, PointFeature box, int downOffset) {
 
         g.setColor(Color.RED);
 

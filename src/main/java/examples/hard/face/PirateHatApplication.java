@@ -2,7 +2,7 @@ package examples.hard.face;
 
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
 import com.harium.keel.awt.image.filter.ContrastQuickFilter;
 import com.harium.etyl.commons.context.Application;
@@ -40,19 +40,19 @@ public class PirateHatApplication extends Application {
 
     private final int IMAGES_TO_LOAD = 90;
 
-    private List<Component> skinFeatures;
+    private List<PointFeature> skinFeatures;
 
-    private Component screen;
+    private PointFeature screen;
 
     private ImageLayer pirateHat;
 
-    private Component overMouse = null;
+    private PointFeature overMouse = null;
 
-    private Component biggestComponent = null;
+    private PointFeature biggestPointFeature = null;
 
     private BufferedImage image;
 
-    private Map<Component, Double> map = new HashMap<Component, Double>();
+    private Map<PointFeature, Double> map = new HashMap<PointFeature, Double>();
 
     public PirateHatApplication(int w, int h) {
         super(w, h);
@@ -136,11 +136,11 @@ public class PirateHatApplication extends Application {
         //Shadow and Mouth
         skinFilter.addColor(new Color(0x6B, 0x57, 0x60), tolerance);
 
-        //skinFilter.addComponentStrategy(new MinDensityValidation(minDensity));
-        //skinFilter.addComponentStrategy(new MaxDensityValidation(maxDensity));
-        //skinFilter.addComponentStrategy(new MinComponentDimension(40));//Avoid small noises
-        //skinFilter.addComponentStrategy(new CountComponentPoints(180));//Avoid small noises
-        //skinFilter.addComponentStrategy(new MaxComponentDimension(w/2));
+        //skinFilter.addPointFeatureStrategy(new MinDensityValidation(minDensity));
+        //skinFilter.addPointFeatureStrategy(new MaxDensityValidation(maxDensity));
+        //skinFilter.addPointFeatureStrategy(new MinPointFeatureDimension(40));//Avoid small noises
+        //skinFilter.addPointFeatureStrategy(new CountPointFeaturePoints(180));//Avoid small noises
+        //skinFilter.addPointFeatureStrategy(new MaxPointFeatureDimension(w/2));
 
     }
 
@@ -155,7 +155,7 @@ public class PirateHatApplication extends Application {
 
         source.setImage(image);
 
-        screen = new Component(0, 0, w, h);
+        screen = new PointFeature(0, 0, w, h);
 
         //Sampled
         skinFeatures = skinFilter.filter(source, screen);
@@ -163,9 +163,9 @@ public class PirateHatApplication extends Application {
 
         //TODO Merge components
 
-        biggestComponent = findBiggestComponent(skinFeatures);
+        biggestPointFeature = findBiggestPointFeature(skinFeatures);
 
-        //biggestComponent = mergeComponents(biggestComponent, skinFeatures);
+        //biggestPointFeature = mergePointFeatures(biggestPointFeature, skinFeatures);
 
     }
 
@@ -178,7 +178,7 @@ public class PirateHatApplication extends Application {
 
         if (!skinFeatures.isEmpty()) {
 
-            for (Component component : skinFeatures) {
+            for (PointFeature component : skinFeatures) {
 
                 if (component.colidePoint(mx, my)) {
 
@@ -299,11 +299,11 @@ public class PirateHatApplication extends Application {
 
     }
 
-    private void drawFeatures(List<Component> features, Graphics g) {
+    private void drawFeatures(List<PointFeature> features, Graphics g) {
 
-        //List<Component> features = mergeComponents(skinFeatures);
+        //List<PointFeature> features = mergePointFeatures(skinFeatures);
 
-        for (Component component : features) {
+        for (PointFeature component : features) {
 
             if (component != overMouse) {
 
@@ -339,17 +339,17 @@ public class PirateHatApplication extends Application {
 
         }
 
-        if (biggestComponent != null) {
+        if (biggestPointFeature != null) {
 
-            //g.drawRect(biggestComponent.getRectangle());
+            //g.drawRect(biggestPointFeature.getRectangle());
 
-            drawPirateHat(biggestComponent, g);
+            drawPirateHat(biggestPointFeature, g);
 
         }
 
     }
 
-    private void drawPirateHat(Component face, Graphics g) {
+    private void drawPirateHat(PointFeature face, Graphics g) {
 
 
         double angle = drawAndCalculateAngle(face, g);
@@ -369,17 +369,17 @@ public class PirateHatApplication extends Application {
 
     }
 
-    private Component mergeComponents(Component biggestComponent, List<Component> components) {
+    private PointFeature mergePointFeatures(PointFeature biggestPointFeature, List<PointFeature> components) {
 
-        components.remove(biggestComponent);
+        components.remove(biggestPointFeature);
 
         for (int i = components.size() - 1; i > 0; i--) {
 
-            Component candidate = components.get(i);
+            PointFeature candidate = components.get(i);
 
-            if (biggestComponent.colide(candidate)) {
+            if (biggestPointFeature.colide(candidate)) {
 
-                biggestComponent.merge(candidate);
+                biggestPointFeature.merge(candidate);
 
                 components.remove(i);
 
@@ -387,13 +387,13 @@ public class PirateHatApplication extends Application {
 
         }
 
-        components.add(0, biggestComponent);
+        components.add(0, biggestPointFeature);
 
-        return biggestComponent;
+        return biggestPointFeature;
 
     }
 
-    private Component findBiggestComponent(List<Component> components) {
+    private PointFeature findBiggestPointFeature(List<PointFeature> components) {
 
         if (components.isEmpty()) {
             return null;
@@ -401,13 +401,13 @@ public class PirateHatApplication extends Application {
 
         map.clear();
 
-        Component biggestComponent = components.get(0);
+        PointFeature biggestPointFeature = components.get(0);
 
         double bestMatch = 0;
 
         for (int i = 0; i < components.size(); i++) {
 
-            Component candidate = components.get(i);
+            PointFeature candidate = components.get(i);
 
             double area = candidate.getArea() / 20;
 
@@ -420,7 +420,7 @@ public class PirateHatApplication extends Application {
             double weight = area * density;
 
             if (weight > bestMatch) {
-                biggestComponent = candidate;
+                biggestPointFeature = candidate;
                 bestMatch = weight;
             }
 
@@ -428,11 +428,11 @@ public class PirateHatApplication extends Application {
 
         }
 
-        return biggestComponent;
+        return biggestPointFeature;
 
     }
 
-    private double drawAndCalculateAngle(Component component, Graphics g) {
+    private double drawAndCalculateAngle(PointFeature component, Graphics g) {
 
         int upperPoints = 0, upperX = 0, upperY = 0;
 

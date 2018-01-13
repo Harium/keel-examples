@@ -3,11 +3,11 @@ package examples.misc;
 import com.harium.keel.awt.camera.Camera;
 import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
-import com.harium.keel.filter.validation.MinCountPoints;
-import com.harium.keel.filter.validation.MinDensityValidation;
-import com.harium.keel.filter.validation.MinDimensionValidation;
+import com.harium.keel.filter.validation.point.MinCountPoints;
+import com.harium.keel.filter.validation.point.MinDensityValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.context.UpdateIntervalListener;
 import com.harium.etyl.commons.event.KeyEvent;
@@ -38,9 +38,9 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
 
     private final int IMAGES_TO_LOAD = 50;
 
-    private List<Component> skinFeatures;
+    private List<PointFeature> skinFeatures;
 
-    private Component screen;
+    private PointFeature screen;
 
     private ImageLayer pirateHat;
 
@@ -131,7 +131,7 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
         int w = b.getWidth();
         int h = b.getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new PointFeature(0, 0, w, h);
 
         source.setImage(b);
         //Sampled
@@ -194,7 +194,7 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
 
         g.setLineWidth(2);
 
-        for (Component skin : skinFeatures) {
+        for (PointFeature skin : skinFeatures) {
 
             g.setColor(Color.BLUE_VIOLET);
             g.drawRect(skin.getRectangle());
@@ -213,23 +213,23 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
 
     }
 
-    private void drawPirateHat(List<Component> components, Graphics g) {
+    private void drawPirateHat(List<PointFeature> components, Graphics g) {
 
         if (!skinFeatures.isEmpty()) {
 
-            Component biggestComponent = findBiggestComponent(skinFeatures);
+            PointFeature biggestPointFeature = findBiggestPointFeature(skinFeatures);
 
-            double angle = drawAndCalculateAngle(biggestComponent, g);
+            double angle = drawAndCalculateAngle(biggestPointFeature, g);
 
             double hatScale = 2;//The Pirate Hat has the double of the head width
 
-            double scale = ((double) biggestComponent.getW() * hatScale / (double) this.w);
+            double scale = ((double) biggestPointFeature.getW() * hatScale / (double) this.w);
 
             pirateHat.setScale(scale);
             //pirateHat.setAngle(angle);
 
-            pirateHat.centralizeX(biggestComponent.getX(), biggestComponent.getX() + biggestComponent.getW());
-            pirateHat.setY(biggestComponent.getY() - (int) ((pirateHat.getH()) * scale));
+            pirateHat.centralizeX(biggestPointFeature.getX(), biggestPointFeature.getX() + biggestPointFeature.getW());
+            pirateHat.setY(biggestPointFeature.getY() - (int) ((pirateHat.getH()) * scale));
 
             pirateHat.draw(g);
 
@@ -237,26 +237,26 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
 
     }
 
-    private Component findBiggestComponent(List<Component> components) {
+    private PointFeature findBiggestPointFeature(List<PointFeature> components) {
 
-        Component biggestComponent = components.get(0);
+        PointFeature biggestPointFeature = components.get(0);
 
         int biggestArea = 0;
 
         for (int i = 0; i < components.size(); i++) {
 
-            Component candidate = components.get(i);
+            PointFeature candidate = components.get(i);
 
             if (candidate.getArea() > biggestArea) {
-                biggestComponent = candidate;
+                biggestPointFeature = candidate;
                 biggestArea = candidate.getArea();
             }
         }
 
-        return biggestComponent;
+        return biggestPointFeature;
     }
 
-    private double drawAndCalculateAngle(Component component, Graphics g) {
+    private double drawAndCalculateAngle(PointFeature component, Graphics g) {
 
         int upperPoints = 0, upperX = 0, upperY = 0;
 

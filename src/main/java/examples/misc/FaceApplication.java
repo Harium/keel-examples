@@ -2,7 +2,7 @@ package examples.misc;
 
 import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorPointFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class FaceApplication extends Application {
 
-    private Component screen;
+    private PointFeature screen;
 
     private boolean[][] emptyMask;
 
@@ -33,8 +33,8 @@ public class FaceApplication extends Application {
     private ColorPointFilter findFaceFilter;
     private ColorPointFilter findEye;
 
-    private List<Component> faces;
-    private List<Component> eyes;
+    private List<PointFeature> faces;
+    private List<PointFeature> eyes;
 
     @Override
     public void load() {
@@ -44,7 +44,7 @@ public class FaceApplication extends Application {
         int w = cam.getBufferedImage().getWidth();
         int h = cam.getBufferedImage().getHeight();
 
-        screen = new Component(w, h);
+        screen = new PointFeature(w, h);
 
         emptyMask = new boolean[w][h];
 
@@ -58,7 +58,7 @@ public class FaceApplication extends Application {
 
         //findFace = new FindSkinFilter(w,h);
         findFaceFilter = new ColorPointFilter(w, h);
-        //findFaceFilter.setPixelStrategy(new SkinColorStrategy());
+        //findFaceFilter.setSelectionStrategy(new SkinColorStrategy());
 
         findEye = new ColorPointFilter(w, h, Color.BLACK);
 
@@ -105,11 +105,11 @@ public class FaceApplication extends Application {
 
         faces = findFaceFilter.filter(buf, screen);
 
-        for (Component face : faces) {
+        for (PointFeature face : faces) {
             eyes.addAll(findEye.filter(buf, face));
         }
 
-        for (Component component : faces) {
+        for (PointFeature component : faces) {
 
             //TODO Draw Pixels
             g.setColor(Color.GREEN);
@@ -124,7 +124,7 @@ public class FaceApplication extends Application {
 
         }
 
-        for (Component component : eyes) {
+        for (PointFeature component : eyes) {
 
             g.setColor(Color.BLUE);
             for (Point2D point : component.getPoints()) {
@@ -163,11 +163,11 @@ public class FaceApplication extends Application {
     private int maxX = 600;
     private int maxPontos = 700;
 
-    private void pintaFace(Graphics g, List<Component> componentes) {
+    private void pintaFace(Graphics g, List<PointFeature> componentes) {
 
         int maiorRelevancia = 0;
 
-        for (Component componente : componentes) {
+        for (PointFeature componente : componentes) {
 
             if (componente.getPointCount() >= maxPontos) {
 

@@ -1,7 +1,7 @@
 package examples.medium.application.area;
 
 import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.etyl.commons.layer.GeometricLayer;
 import com.harium.etyl.linear.Point2D;
 
@@ -43,7 +43,7 @@ public class MultiArea {
 
         for (int i = 0; i < areas; i++) {
 
-            Component component = new Component();
+            PointFeature component = new PointFeature();
 
             double subdistance = interval * (i + 1);
             nq = p.distantPoint(q, subdistance + interval);

@@ -1,14 +1,5 @@
 package examples.medium.skin;
 
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.core.Filter;
-import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.SkinColorFilter;
-import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
-import com.harium.keel.filter.validation.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -16,6 +7,16 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.camera.Camera;
+import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.core.Filter;
+import com.harium.keel.core.helper.ColorHelper;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.SkinColorFilter;
+import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -30,9 +31,9 @@ public class SimpleSkinStrategyApplication extends Application {
 
     private SkinColorFilter skinFilter;
 
-    private List<Component> skinComponents;
+    private List<PointFeature> skinPointFeatures;
 
-    private Component screen;
+    private Feature screen;
 
     private Color color = Color.BLACK;
 
@@ -114,7 +115,7 @@ public class SimpleSkinStrategyApplication extends Application {
         int w = cam.getBufferedImage().getWidth();
         int h = cam.getBufferedImage().getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new Feature(w, h);
         skinFilter = new SkinColorFilter(w, h, new SkinColorKovacNewStrategy());
 
         Filter filter = skinFilter.getSearchStrategy();
@@ -125,7 +126,7 @@ public class SimpleSkinStrategyApplication extends Application {
         skinFilter.addValidation(new MinDimensionValidation(20));
 
         source.setImage(cam.getBufferedImage());
-        skinComponents = skinFilter.filter(source, screen);
+        skinPointFeatures = skinFilter.filter(source, screen);
 
         color = randomColor();
     }
@@ -143,12 +144,12 @@ public class SimpleSkinStrategyApplication extends Application {
         g.drawImage(cam.getBufferedImage(), 0, 0);
 
         //Draw a red line around the components
-        drawComponents(g);
+        drawPointFeatures(g);
     }
 
-    protected void drawComponents(Graphics g) {
-        for (int i = 0; i < skinComponents.size(); i++) {
-            Component component = skinComponents.get(i);
+    protected void drawPointFeatures(Graphics g) {
+        for (int i = 0; i < skinPointFeatures.size(); i++) {
+            PointFeature component = skinPointFeatures.get(i);
 
             //g.setStroke(new BasicStroke(3f));
 

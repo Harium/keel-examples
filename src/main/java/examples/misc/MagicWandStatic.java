@@ -1,16 +1,17 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.color.ColorStrategy;
-import com.harium.keel.filter.search.flood.FloodFillSearch;
-import com.harium.keel.modifier.EnvelopeModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.color.RGBColorStrategy;
+import com.harium.keel.filter.search.flood.FloodFillSearch;
+import com.harium.keel.modifier.EnvelopeModifier;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -22,7 +23,7 @@ public class MagicWandStatic extends Application {
 
     private FloodFillSearch cornerFilter;
 
-    private ColorStrategy colorStrategy;
+    private RGBColorStrategy colorStrategy;
 
     private EnvelopeModifier modifier;
 
@@ -34,7 +35,7 @@ public class MagicWandStatic extends Application {
 
     private final int IMAGES_TO_LOAD = 7;
 
-    private List<Component> features;
+    private List<PointFeature> features;
 
     public MagicWandStatic(int w, int h) {
         super(w, h);
@@ -61,7 +62,7 @@ public class MagicWandStatic extends Application {
 
         loading = 40;
 
-        colorStrategy = new ColorStrategy(Color.BLACK);
+        colorStrategy = new RGBColorStrategy(Color.BLACK);
         colorStrategy.setTolerance(0x10);
 
         modifier = new EnvelopeModifier();
@@ -69,7 +70,7 @@ public class MagicWandStatic extends Application {
         cornerFilter = new FloodFillSearch(width, height);
         cornerFilter.setBorder(10);
 
-        cornerFilter.setPixelStrategy(colorStrategy);
+        cornerFilter.setSelectionStrategy(colorStrategy);
 
         cornerFilter.setComponentModifierStrategy(modifier);
 
@@ -86,7 +87,7 @@ public class MagicWandStatic extends Application {
 
         source.setImage(b);
 
-        features = cornerFilter.filter(source, new Component(0, 0, w, h));
+        features = cornerFilter.filter(source, new Feature(w, h));
 
         loading = 65;
         loadingInfo = "Show Result";
@@ -126,7 +127,7 @@ public class MagicWandStatic extends Application {
 
         g.setColor(Color.BLUE);
 
-        for (Component feature : features) {
+        for (PointFeature feature : features) {
             for (Point2D point : feature.getPoints()) {
                 g.fillCircle(xOffset + (int) point.getX(), yOffset + (int) point.getY(), 5);
             }
@@ -140,7 +141,7 @@ public class MagicWandStatic extends Application {
         }
     }
 
-    private void drawBox(Graphics g, Component box) {
+    private void drawBox(Graphics g, PointFeature box) {
 
         g.setColor(Color.RED);
 

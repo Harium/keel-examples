@@ -3,8 +3,10 @@ package examples.misc;
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.color.ColorStrategy;
+import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.color.skin.SkinColorStrategy;
 import com.harium.keel.filter.search.CrossSearch;
 import com.harium.keel.filter.search.TriangularSearch;
@@ -40,17 +42,17 @@ public class FaceStatic extends Application {
 
     private final int IMAGES_TO_LOAD = 50;
 
-    private Component blackSampledFeature;
+    private PointFeature blackSampledFeature;
 
-    private Component lightDirection;
+    private PointFeature lightDirection;
 
-    private List<Component> skinFeatures;
+    private List<PointFeature> skinFeatures;
 
     private Polygon blackPolygon = new Polygon();
 
     private Polygon whitePolygon = new Polygon();
 
-    private Component screen;
+    private Feature screen;
 
     private FastConvexHullModifier modifier;
 
@@ -76,10 +78,10 @@ public class FaceStatic extends Application {
 
         modifier = new FastConvexHullModifier();
 
-        ColorStrategy blackColorFilter = new ColorStrategy(Color.BLACK.getRGB());
+        RGBColorStrategy blackColorFilter = new RGBColorStrategy(Color.BLACK.getRGB());
         blackColorFilter.setTolerance(0x50);
 
-        blackFilter.setPixelStrategy(blackColorFilter);
+        blackFilter.setSelectionStrategy(blackColorFilter);
         blackFilter.setComponentModifierStrategy(modifier);
 
         //border: 4 and step: 4
@@ -87,10 +89,10 @@ public class FaceStatic extends Application {
         blackFilter.setStep(4);
 
         //White Color
-        ColorStrategy whiteColorFilter = new ColorStrategy(Color.WHITE.getRGB());
+        RGBColorStrategy whiteColorFilter = new RGBColorStrategy(Color.WHITE.getRGB());
         whiteColorFilter.setTolerance(0x64);
 
-        whiteFilter.setPixelStrategy(whiteColorFilter);
+        whiteFilter.setSelectionStrategy(whiteColorFilter);
         whiteFilter.setComponentModifierStrategy(modifier);
 
         whiteFilter.setBorder(4);
@@ -98,7 +100,7 @@ public class FaceStatic extends Application {
 
         skinFilter = new TriangularSearch(width, height);
         skinFilter.setBorder(4);
-        skinFilter.setPixelStrategy(new SkinColorStrategy());
+        skinFilter.setSelectionStrategy(new SkinColorStrategy());
         skinFilter.setComponentModifierStrategy(new EnvelopeModifier());
 
         loading = 60;
@@ -111,7 +113,7 @@ public class FaceStatic extends Application {
         int w = b.getWidth();
         int h = b.getHeight();
 
-        screen = new Component(w, h);
+        screen = new Feature(w, h);
 
         source.setImage(b);
 
@@ -122,7 +124,7 @@ public class FaceStatic extends Application {
         blackPolygon = PolygonHelper.getPolygon(blackSampledFeature);
 
 
-        //White Component
+        //White PointFeature
         lightDirection = whiteFilter.filterFirst(source, screen);
         whitePolygon.reset();
 
@@ -183,7 +185,7 @@ public class FaceStatic extends Application {
         g.drawRect(lightDirection.getRectangle());
 
         g.setLineWidth(2);
-        for (Component skin : skinFeatures) {
+        for (PointFeature skin : skinFeatures) {
             g.setColor(Color.BLUE_VIOLET);
             g.drawRect(skin.getRectangle());
         }

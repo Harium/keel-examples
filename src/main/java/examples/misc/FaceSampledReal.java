@@ -1,176 +1,177 @@
 package examples.misc;
 
-import java.awt.Polygon;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.color.ColorStrategy;
-import com.harium.keel.filter.search.CrossSearch;
-import com.harium.keel.modifier.hull.FastConvexHullModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.camera.CameraV4L4J;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.color.RGBColorStrategy;
+import com.harium.keel.filter.search.CrossSearch;
+import com.harium.keel.modifier.hull.FastConvexHullModifier;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FaceSampledReal extends Application {
 
-	private CameraV4L4J cam;
-	private BufferedImageSource source = new BufferedImageSource();
-	
-	private CrossSearch colorFilter = new CrossSearch();
+    private CameraV4L4J cam;
+    private BufferedImageSource source = new BufferedImageSource();
 
-	private FastConvexHullModifier quickHull = new FastConvexHullModifier();
-		
-	private boolean hide = false;
-	private boolean pixels = true;
+    private CrossSearch colorFilter = new CrossSearch();
 
-	private int xOffset = 0;
-	private int yOffset = 0;
+    private FastConvexHullModifier quickHull = new FastConvexHullModifier();
 
-	private Component sampledFeature;
+    private boolean hide = false;
+    private boolean pixels = true;
 
-	private Polygon sampledPolygon = new Polygon();
-	
-	private Component screen;
+    private int xOffset = 0;
+    private int yOffset = 0;
 
-	public FaceSampledReal(int w, int h) {
-		super(w, h);
-	}
-	
-	@Override
-	public void load() {
+    private PointFeature sampledFeature;
 
-		loadingInfo = "Loading Images";
+    private Polygon sampledPolygon = new Polygon();
 
-		cam = new CameraV4L4J(0);
-		
-		screen = new Component(0, 0, cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
+    private Feature screen;
 
-		ColorStrategy colorStrategy = new ColorStrategy(Color.BLACK);
-		colorFilter.setPixelStrategy(colorStrategy);
-		
-		final int MAGIC_NUMBER = 3;//Higher = Faster and less precise
-		
-		colorFilter.setBorder(MAGIC_NUMBER);
-		colorFilter.setStep(MAGIC_NUMBER);
+    public FaceSampledReal(int w, int h) {
+        super(w, h);
+    }
 
-		loadingInfo = "Configuring Filter";
-		
-		loading = 60;
-		reset(cam.getBufferedImage());
+    @Override
+    public void load() {
 
-		loading = 100;
-	}
+        loadingInfo = "Loading Images";
 
-	private void reset(BufferedImage b) {
-		source.setImage(b);
-		//Sampled
-		sampledFeature = colorFilter.filter(source, screen).get(0);
+        cam = new CameraV4L4J(0);
 
-		sampledPolygon.reset();
+        screen = new Feature(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
 
-		//TODO Separate polygons
-		List<Point2D> points = quickHull.modify(sampledFeature).getPoints();
-		
-		for(Point2D point: points){
-			sampledPolygon.addPoint((int)point.getX(), (int)point.getY());	
-		}
-	}
+        RGBColorStrategy colorStrategy = new RGBColorStrategy(Color.BLACK);
+        colorFilter.setSelectionStrategy(colorStrategy);
 
-	private List<Component> separateComponents(Component feature){
+        final int MAGIC_NUMBER = 3;//Higher = Faster and less precise
 
-		List<Component> result = new ArrayList<Component>();
+        colorFilter.setBorder(MAGIC_NUMBER);
+        colorFilter.setStep(MAGIC_NUMBER);
 
-		List<Point2D> points = new ArrayList<Point2D>(feature.getPoints());
+        loadingInfo = "Configuring Filter";
 
-		Component currentComponent = new Component(0, 0);		
+        loading = 60;
+        reset(cam.getBufferedImage());
 
-		currentComponent.add(points.get(0));
+        loading = 100;
+    }
 
-		int p = 1;
+    private void reset(BufferedImage b) {
+        source.setImage(b);
+        //Sampled
+        sampledFeature = colorFilter.filter(source, screen).get(0);
 
-		Point2D pt = points.get(p);		
+        sampledPolygon.reset();
 
-		final int radius = 20;
+        //TODO Separate polygons
+        List<Point2D> points = quickHull.modify(sampledFeature).getPoints();
 
-		//while(points.size()>0){
+        for (Point2D point : points) {
+            sampledPolygon.addPoint((int) point.getX(), (int) point.getY());
+        }
+    }
 
-			for(int i=1;i<points.size();i++){
+    private List<PointFeature> separatePointFeatures(PointFeature feature) {
 
-				Point2D q = points.get(i);
+        List<PointFeature> result = new ArrayList<PointFeature>();
 
-				if(insideCircle((int)pt.getX(), (int)pt.getY(), radius, (int)q.getX(), (int)q.getY())){
-					currentComponent.add(q);
-					points.remove(i);
-					continue;
-				}
+        List<Point2D> points = new ArrayList<Point2D>(feature.getPoints());
 
-			}
-			
-		//}
+        PointFeature currentPointFeature = new PointFeature(0, 0);
 
+        currentPointFeature.add(points.get(0));
 
-		return result;
+        int p = 1;
+
+        Point2D pt = points.get(p);
+
+        final int radius = 20;
+
+        //while(points.size()>0){
+
+        for (int i = 1; i < points.size(); i++) {
+
+            Point2D q = points.get(i);
+
+            if (insideCircle((int) pt.getX(), (int) pt.getY(), radius, (int) q.getX(), (int) q.getY())) {
+                currentPointFeature.add(q);
+                points.remove(i);
+                continue;
+            }
+
+        }
+
+        //}
 
 
-	}
+        return result;
 
-	private boolean insideCircle(int cx, int cy, int radius, int px, int py){
 
-		float difX = (x - cx)*(x - cx);
-		float difY = (x - cx)*(x - cx);
+    }
 
-		return difX + difY < radius*radius;
+    private boolean insideCircle(int cx, int cy, int radius, int px, int py) {
 
-	}
+        float difX = (x - cx) * (x - cx);
+        float difY = (x - cx) * (x - cx);
 
-	@Override
-	public void updateKeyboard(KeyEvent event) {
+        return difX + difY < radius * radius;
 
-		if(event.isKeyDown(KeyEvent.VK_H)){
-			hide = !hide;
-		}
+    }
 
-		if(event.isKeyDown(KeyEvent.VK_P)){
-			pixels = !pixels;
-		}
-	}
+    @Override
+    public void updateKeyboard(KeyEvent event) {
 
-	@Override
-	public void draw(Graphics g) {
+        if (event.isKeyDown(KeyEvent.VK_H)) {
+            hide = !hide;
+        }
 
-		if(!hide){
-			g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
-		}
-		
-		reset(cam.getBufferedImage());
+        if (event.isKeyDown(KeyEvent.VK_P)) {
+            pixels = !pixels;
+        }
+    }
 
-		g.setAlpha(60);
-		//drawFeaturedPoints(g, sampledFeature, Color.GREEN);
-		g.setAlpha(100);
+    @Override
+    public void draw(Graphics g) {
 
-		g.setColor(Color.GREEN);
-		g.drawPolygon(sampledPolygon);
+        if (!hide) {
+            g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+        }
 
-	}
+        reset(cam.getBufferedImage());
 
-	private void drawFeaturedPoints(Graphics g, Component feature, Color color){
+        g.setAlpha(60);
+        //drawFeaturedPoints(g, sampledFeature, Color.GREEN);
+        g.setAlpha(100);
 
-		for(Point2D ponto: feature.getPoints()){
+        g.setColor(Color.GREEN);
+        g.drawPolygon(sampledPolygon);
 
-			g.setColor(color);
-			g.fillCircle(xOffset+(int)ponto.getX(), yOffset+(int)ponto.getY(), 5);
+    }
 
-			//g.setColor(Color.WHITE);
-			//g.drawCircle(xOffset+(int)ponto.getX(), yOffset+(int)ponto.getY(), 18);
+    private void drawFeaturedPoints(Graphics g, PointFeature feature, Color color) {
 
-		}
+        for (Point2D ponto : feature.getPoints()) {
 
-	}
+            g.setColor(color);
+            g.fillCircle(xOffset + (int) ponto.getX(), yOffset + (int) ponto.getY(), 5);
+
+            //g.setColor(Color.WHITE);
+            //g.drawCircle(xOffset+(int)ponto.getX(), yOffset+(int)ponto.getY(), 18);
+
+        }
+
+    }
 
 }

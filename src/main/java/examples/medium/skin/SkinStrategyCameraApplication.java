@@ -1,7 +1,7 @@
 package examples.medium.skin;
 
 import com.harium.keel.awt.camera.CameraSarxosWebcam;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.etyl.core.graphics.Graphics;
 
 public class SkinStrategyCameraApplication extends SimpleFaceFinderApplication {
@@ -18,13 +18,13 @@ public class SkinStrategyCameraApplication extends SimpleFaceFinderApplication {
 	public void draw(Graphics g) {
 		g.drawImage(cam.getBufferedImage(), 0, 0);
 		reset();
-		//drawComponents(g);
-		drawComponent(g, bestCandidate);
+		//drawPointFeatures(g);
+		drawPointFeature(g, bestCandidate);
 		
-		for(Component feature: faceComponents) {
-			drawComponent(g, feature);
+		for(PointFeature feature: facePointFeatures) {
+			drawPointFeature(g, feature);
 		}
-		//drawComponents(g);
+		//drawPointFeatures(g);
 	}
 	
 }

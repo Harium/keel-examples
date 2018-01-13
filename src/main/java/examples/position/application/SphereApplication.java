@@ -1,14 +1,6 @@
 package examples.position.application;
 
 
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.CameraSarxosWebcam;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.classifier.CircleClassifier;
-import com.harium.keel.feature.Component;
-import com.harium.keel.filter.ColorFilter;
-import com.harium.keel.filter.validation.MaxDimensionValidation;
-import com.harium.keel.filter.validation.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -16,6 +8,15 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.layer.BufferedLayer;
+import com.harium.keel.awt.camera.Camera;
+import com.harium.keel.awt.camera.CameraSarxosWebcam;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.classifier.CircleClassifier;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.ColorFilter;
+import com.harium.keel.filter.validation.point.MaxDimensionValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.HashSet;
@@ -27,12 +28,12 @@ public class SphereApplication extends Application {
     Color color = Color.BLUE;
     ColorFilter colorFilter;
 
-    Component screen;
+    Feature screen;
     BufferedImageSource source;
     private BufferedLayer layer;
 
-    List<Component> components;
-    Set<Component> circle = new HashSet<>();
+    List<PointFeature> components;
+    Set<PointFeature> circle = new HashSet<>();
 
     private Camera cam;
 
@@ -56,13 +57,13 @@ public class SphereApplication extends Application {
         colorFilter.addValidation(new MaxDimensionValidation(300));
     }
 
-    protected Component setupCamera() {
+    protected Feature setupCamera() {
         cam = new CameraSarxosWebcam(0);
 
         int w = cam.getBufferedImage().getWidth();
         int h = cam.getBufferedImage().getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new Feature(w, h);
         layer = new BufferedLayer(w, h);
 
         return screen;
@@ -82,7 +83,7 @@ public class SphereApplication extends Application {
 
         circle.clear();
         CircleClassifier classifier = new CircleClassifier();
-        for (Component component : components) {
+        for (PointFeature component : components) {
             if (classifier.classify(component)) {
                 circle.add(component);
             }
@@ -132,7 +133,7 @@ public class SphereApplication extends Application {
             g.drawImage(layer.getBuffer(), xOffset, yOffset);
         }
 
-        for (Component component : components) {
+        for (PointFeature component : components) {
             if (!circle.contains(component)) {
                 g.setColor(Color.RED);
             } else {

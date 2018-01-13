@@ -6,10 +6,11 @@ import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
-import com.harium.keel.feature.hull.HullComponent;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.feature.hull.HullFeature;
 import com.harium.keel.filter.ColorFilter;
-import com.harium.keel.filter.validation.MaxDimensionValidation;
+import com.harium.keel.filter.validation.point.MaxDimensionValidation;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
 
 import java.awt.*;
@@ -28,10 +29,10 @@ public class SubcomponentApplication extends Application {
 
     private FastConvexHullModifier modifier;
 
-    private Component screen;
+    private Feature screen;
 
-    private List<Component> whiteComponents;
-    private Map<Integer, List<Component>> subComponents;
+    private List<PointFeature> whitePointFeatures;
+    private Map<Integer, List<PointFeature>> subPointFeatures;
 
     public SubcomponentApplication(int w, int h) {
         super(w, h);
@@ -40,10 +41,10 @@ public class SubcomponentApplication extends Application {
     @Override
     public void load() {
 
-        subComponents = new HashMap<Integer, List<Component>>();
+        subPointFeatures = new HashMap<Integer, List<PointFeature>>();
 
         //Define the area to search for elements
-        screen = new Component(0, 0, w, h);
+        screen = new PointFeature(0, 0, w, h);
 
         image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
@@ -58,14 +59,15 @@ public class SubcomponentApplication extends Application {
         blackFilter = new ColorFilter(w, h, Color.BLACK);
 
         //Filter the image
-        whiteComponents = whiteFilter.filter(source, screen);
+        whitePointFeatures = whiteFilter.filter(source, screen);
 
         modifier = new FastConvexHullModifier();
 
-        HullComponent hull = modifier.modify(whiteComponents.get(0));
-        List<Component> sub = blackFilter.filter(source, hull);
+        HullFeature hull = modifier.modify(whitePointFeatures.get(0));
 
-        subComponents.put(0, sub);
+        List<PointFeature> sub = blackFilter.filter(source, hull);
+
+        subPointFeatures.put(0, sub);
     }
 
     private void createImage(BufferedImage image) {
@@ -102,16 +104,16 @@ public class SubcomponentApplication extends Application {
 
         g.setAlpha(90);
 
-        //Count subComponents
-        for (Component component : whiteComponents) {
+        //Count subPointFeatures
+        for (PointFeature component : whitePointFeatures) {
             //Draw a red line around the hull of white components
             g.setStroke(new BasicStroke(3f));
             g.setColor(Color.RED);
             g.drawPolygon(PolygonHelper.getBoundingBox(component));
         }
 
-        for (List<Component> list : subComponents.values()) {
-            for (Component subcomponent : list) {
+        for (List<PointFeature> list : subPointFeatures.values()) {
+            for (PointFeature subcomponent : list) {
                 g.setStroke(new BasicStroke(3f));
                 g.setColor(Color.BLUE_VIOLET);
                 g.drawPolygon(PolygonHelper.getBoundingBox(subcomponent));

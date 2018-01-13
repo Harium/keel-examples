@@ -1,8 +1,8 @@
 package examples.basic.hull;
 
 import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.feature.Component;
-import com.harium.keel.feature.hull.HullComponent;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.feature.hull.HullFeature;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -17,9 +17,9 @@ public class QuickHullExampleApplication extends Application {
 
     private FastConvexHullModifier quickHullModifier;
 
-    private Component component;
+    private PointFeature component;
 
-    private HullComponent convexHull = null;
+    private HullFeature convexHull = null;
 
     public QuickHullExampleApplication(int w, int h) {
         super(w, h);//Size of our application
@@ -29,7 +29,7 @@ public class QuickHullExampleApplication extends Application {
     public void load() {
 
         //listOfPoints = new ArrayList<Point2D>();
-        component = new Component();
+        component = new PointFeature();
 
         quickHullModifier = new FastConvexHullModifier();
 

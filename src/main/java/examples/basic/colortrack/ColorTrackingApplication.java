@@ -2,7 +2,7 @@ package examples.basic.colortrack;
 
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.graphics.Color;
@@ -21,11 +21,11 @@ public class ColorTrackingApplication extends Application {
 	
 	private ColorFilter blackFilter;
 	
-	private Component screen;
+	private PointFeature screen;
 	
-	private List<Component> blueComponents;
+	private List<PointFeature> bluePointFeatures;
 	
-	private List<Component> blackComponents;
+	private List<PointFeature> blackPointFeatures;
 	
 	public ColorTrackingApplication(int w, int h) {
 		super(w, h);
@@ -35,7 +35,7 @@ public class ColorTrackingApplication extends Application {
 	public void load() {
 		
 		//Define the area to search for elements
-		screen = new Component(0, 0, w, h);
+		screen = new PointFeature(0, 0, w, h);
 		
 		image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 				
@@ -49,9 +49,9 @@ public class ColorTrackingApplication extends Application {
 		blueFilter = new ColorFilter(w, h, Color.BLUE);
 		
 		//Filter the image 
-		blueComponents = blueFilter.filter(source, screen);
+		bluePointFeatures = blueFilter.filter(source, screen);
 		
-		blackComponents = blackFilter.filter(source, screen);
+		blackPointFeatures = blackFilter.filter(source, screen);
 		
 	}
 	
@@ -89,14 +89,14 @@ public class ColorTrackingApplication extends Application {
 		g.setAlpha(90);
 		
 		//Draw a red line around the black components
-		for(Component component: blackComponents) {
+		for(PointFeature component: blackPointFeatures) {
 			g.setStroke(new BasicStroke(3f));
 			g.setColor(Color.RED);
 			g.drawPolygon(PolygonHelper.getBoundingBox(component));
 		}
 		
 		//Draw a yellow line around the blue components
-		for(Component component: blueComponents) {
+		for(PointFeature component: bluePointFeatures) {
 			g.setStroke(new BasicStroke(3f));
 			g.setColor(Color.YELLOW);
 			g.drawRect(component.getRectangle());

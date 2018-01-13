@@ -1,6 +1,6 @@
 package examples.medium.middleline;
 
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.modifier.MiddleLineModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -14,7 +14,7 @@ import com.harium.etyl.linear.graph.Node;
 
 public class MiddleLineApplication extends Application {
 
-    private Component component;
+    private PointFeature component;
 
     private Graph<Integer> graph;
 
@@ -27,7 +27,7 @@ public class MiddleLineApplication extends Application {
     @Override
     public void load() {
 
-        component = new Component();
+        component = new PointFeature();
 
         component.add(203, 252);
         component.add(255, 226);

@@ -3,8 +3,10 @@ package examples.misc;
 import com.harium.keel.awt.camera.Camera;
 import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.color.ColorStrategy;
+import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.TriangularSearch;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -26,13 +28,13 @@ public class SimpleCam extends Application {
 
     private TriangularSearch colorFilter;
 
-    private ColorStrategy colorStrategy;
+    private RGBColorStrategy colorStrategy;
 
     private BufferedLayer mirror;
 
-    private Component screen;
+    private Feature screen;
 
-    private Component point;
+    private PointFeature point;
 
     @Override
     public void load() {
@@ -46,15 +48,15 @@ public class SimpleCam extends Application {
         int w = buffer.getWidth();
         int h = buffer.getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new Feature(0, 0, w, h);
 
         loadingInfo = "Setting Filter";
 
         colorFilter = new TriangularSearch(w, h);
         colorFilter.setBorder(20);
 
-        colorStrategy = new ColorStrategy(Color.BLACK.getRGB());
-        colorFilter.setPixelStrategy(colorStrategy);
+        colorStrategy = new RGBColorStrategy(Color.BLACK.getRGB());
+        colorFilter.setSelectionStrategy(colorStrategy);
 
         mirror = new BufferedLayer(0, 0);
 

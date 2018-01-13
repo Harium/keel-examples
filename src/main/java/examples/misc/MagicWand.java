@@ -3,7 +3,7 @@ package examples.misc;
 import com.harium.keel.awt.camera.Camera;
 import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.color.ColorStrategy;
 import com.harium.keel.filter.search.flood.FloodFillSearch;
 import com.harium.keel.modifier.EnvelopeModifier;
@@ -36,7 +36,7 @@ public class MagicWand extends Application implements UpdateIntervalListener {
     private int xOffset = 40;
     private int yOffset = 40;
 
-    private Component feature;
+    private PointFeature feature;
 
     private BufferedLayer mirror;
 
@@ -69,11 +69,11 @@ public class MagicWand extends Application implements UpdateIntervalListener {
         cornerFilter = new FloodFillSearch(width, height);
         cornerFilter.setBorder(10);
 
-        cornerFilter.setPixelStrategy(colorStrategy);
+        cornerFilter.setSelectionStrategy(colorStrategy);
 
         cornerFilter.setComponentModifierStrategy(modifier);
 
-        feature = new Component(0, 0, w, h);
+        feature = new PointFeature(0, 0, w, h);
 
         mirror = new BufferedLayer(0, 0);
 
@@ -104,7 +104,7 @@ public class MagicWand extends Application implements UpdateIntervalListener {
         loadingInfo = "Start Filter";
         source.setImage(b);
 
-        feature = cornerFilter.filterFirst(source, new Component(0, 0, w, h));
+        feature = cornerFilter.filterFirst(source, new PointFeature(0, 0, w, h));
 
         loading = 65;
         loadingInfo = "Show Result";
@@ -159,7 +159,7 @@ public class MagicWand extends Application implements UpdateIntervalListener {
 
     }
 
-    private void drawBox(Graphics g, Component box) {
+    private void drawBox(Graphics g, PointFeature box) {
 
         g.setColor(Color.RED);
 

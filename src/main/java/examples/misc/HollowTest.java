@@ -1,7 +1,7 @@
 package examples.misc;
 
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.RedLedFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.core.graphics.Graphics;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HollowTest extends Application {
 
-    private Component screen;
+    private PointFeature screen;
     private RedLedFilter filter;
     private BufferedImageSource source = new BufferedImageSource();
 
@@ -29,7 +29,7 @@ public class HollowTest extends Application {
         //TODO Change to Camera Size in Real Application
         filter = new RedLedFilter(w, h);
 
-        screen = new Component(w, h);
+        screen = new PointFeature(w, h);
 
         BufferedImage test1 = ImageLoader.getInstance().getImage("test/test1.png");
         BufferedImage test2 = ImageLoader.getInstance().getImage("test/test2.png");
@@ -49,14 +49,14 @@ public class HollowTest extends Application {
 
         source.setImage(test);
 
-        List<Component> components = filter.filter(source, screen);
+        List<PointFeature> components = filter.filter(source, screen);
 
         Color color = Color.RED;
         if (components.size() == 8) {
             color = Color.BLUE;
         }
 
-        for (Component component : components) {
+        for (PointFeature component : components) {
             g.setColor(color);
             g.drawRect(component.getLayer());
             g.setColor(Color.WHITE);

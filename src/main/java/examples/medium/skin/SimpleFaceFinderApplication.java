@@ -12,7 +12,7 @@ import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.core.Filter;
 import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ExpandableColorFilter;
 import com.harium.keel.filter.HardColorFilter;
 import com.harium.keel.filter.SkinColorFilter;
@@ -32,13 +32,13 @@ public class SimpleFaceFinderApplication extends Application {
 
     private SkinColorFilter skinFilter;
 
-    protected Component bestCandidate;
-    private List<Component> skinComponents;
-    private List<Component> darkComponents;
-    private Map<Component, Integer> counts = new HashMap<Component, Integer>();
-    protected List<Component> faceComponents = new ArrayList<Component>();
+    protected PointFeature bestCandidate;
+    private List<PointFeature> skinPointFeatures;
+    private List<PointFeature> darkPointFeatures;
+    private Map<PointFeature, Integer> counts = new HashMap<PointFeature, Integer>();
+    protected List<PointFeature> facePointFeatures = new ArrayList<PointFeature>();
 
-    private Component screen;
+    private PointFeature screen;
 
     private Color color = Color.BLACK;
 
@@ -120,7 +120,7 @@ public class SimpleFaceFinderApplication extends Application {
         int w = image.getWidth();
         int h = image.getHeight();
 
-        screen = new Component(0, 0, w, h);
+        screen = new PointFeature(0, 0, w, h);
         skinFilter = new SkinColorFilter(w, h, new SkinColorKovacNewStrategy());
         HardColorFilter colorFilter = new HardColorFilter(w, h, new Color(40, 40, 40), 25);
 
@@ -130,14 +130,14 @@ public class SimpleFaceFinderApplication extends Application {
 
         //Remove components smaller than 20x20
         skinFilter.addValidation(new MinDimensionValidation(20));
-        skinComponents = skinFilter.filter(source, screen);
+        skinPointFeatures = skinFilter.filter(source, screen);
 
         colorFilter.addValidation(new MinDimensionValidation(3));
-        darkComponents = colorFilter.filter(source, screen);
+        darkPointFeatures = colorFilter.filter(source, screen);
 
         //Evaluate components
-        //validateComponents();
-        bestCandidate = evaluateComponent(skinComponents);
+        //validatePointFeatures();
+        bestCandidate = evaluatePointFeature(skinPointFeatures);
 
         Color faceColor = AverageColorFilter.filter(source, bestCandidate);
 
@@ -146,39 +146,39 @@ public class SimpleFaceFinderApplication extends Application {
         featureFilter.getSearchStrategy().setStep(4);
         featureFilter.addValidation(new MinDimensionValidation(2));
 
-        faceComponents = featureFilter.filter(source, bestCandidate);
+        facePointFeatures = featureFilter.filter(source, bestCandidate);
 
-        //System.out.println("Fc "+faceComponents.size());
+        //System.out.println("Fc "+facePointFeatures.size());
         color = randomColor();
     }
 
-    private void validateComponents() {
-        for (int i = skinComponents.size() - 1; i >= 0; i--) {
-            Component component = skinComponents.get(i);
+    private void validatePointFeatures() {
+        for (int i = skinPointFeatures.size() - 1; i >= 0; i--) {
+            PointFeature component = skinPointFeatures.get(i);
 
             //Vertical trim component
             //component = trim(component);
 
             //Remove components near from left border
             if (component.getX() < 20 + 10) {
-                skinComponents.remove(i);
+                skinPointFeatures.remove(i);
                 continue;
             }
 
             if (component.getX() + component.getW() > h - 10) {
-                skinComponents.remove(i);
+                skinPointFeatures.remove(i);
                 continue;
             }
         }
     }
 
-    private Component evaluateComponent(List<Component> components) {
+    private PointFeature evaluatePointFeature(List<PointFeature> components) {
         int higher = 0;
-        Component faceCandidate = components.get(0);
+        PointFeature faceCandidate = components.get(0);
 
-        for (Component component : components) {
+        for (PointFeature component : components) {
             int count = 0;
-            for (Component dc : darkComponents) {
+            for (PointFeature dc : darkPointFeatures) {
                 if (component.colide(dc)) {
                     count++;
                 }
@@ -206,36 +206,36 @@ public class SimpleFaceFinderApplication extends Application {
         g.drawImage(cam.getBufferedImage(), 0, 0);
 
         g.setColor(color);
-        drawComponent(g, bestCandidate);
+        drawPointFeature(g, bestCandidate);
 
         g.setColor(Color.RED);
-        for (Component feature : faceComponents) {
+        for (PointFeature feature : facePointFeatures) {
             drawAllPoints(g, feature);
             g.drawRect(feature.getRectangle());
         }
 
         //Draw a red line around the components
-        //drawComponents(g);
+        //drawPointFeatures(g);
 
         //Draw dark components
         /*g.setStroke(new BasicStroke(3f));
         g.setColor(Color.BLACK);
 
-		for(Component component:darkComponents) {
+		for(PointFeature component:darkPointFeatures) {
 			g.drawRect(component.getRectangle());
 		}*/
     }
 
-    protected void drawComponents(Graphics g) {
-        for (int i = 0; i < skinComponents.size(); i++) {
-            Component component = skinComponents.get(i);
+    protected void drawPointFeatures(Graphics g) {
+        for (int i = 0; i < skinPointFeatures.size(); i++) {
+            PointFeature component = skinPointFeatures.get(i);
 
             g.setColor(color);
-            drawComponent(g, component);
+            drawPointFeature(g, component);
         }
     }
 
-    protected void drawComponent(Graphics g, Component component) {
+    protected void drawPointFeature(Graphics g, PointFeature component) {
         //g.setStroke(new BasicStroke(3f));
         g.drawRect(component.getRectangle());
 
@@ -250,7 +250,7 @@ public class SimpleFaceFinderApplication extends Application {
         }
     }
 
-    public void drawPoints(Graphics g, Component component) {
+    public void drawPoints(Graphics g, PointFeature component) {
         for (Point2D point : component.getPoints()) {
 
             if (leftPoints) {
@@ -263,7 +263,7 @@ public class SimpleFaceFinderApplication extends Application {
         }
     }
 
-    public void drawAllPoints(Graphics g, Component component) {
+    public void drawAllPoints(Graphics g, PointFeature component) {
         for (Point2D point : component.getPoints()) {
             g.fillRect((int) point.getX(), (int) point.getY(), 1, 1);
         }

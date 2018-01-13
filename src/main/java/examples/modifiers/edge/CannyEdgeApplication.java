@@ -2,7 +2,7 @@ package examples.modifiers.edge;
 
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.core.source.ImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.modifier.edge.CannyEdgeModifier;
 import com.harium.keel.modifier.edge.EdgeModifier;
 import com.harium.etyl.commons.context.Application;
@@ -16,7 +16,7 @@ import java.util.List;
 
 public class CannyEdgeApplication extends Application {
 
-    private Component screen;
+    private PointFeature screen;
     private ImageSource source;
     private EdgeModifier modifier;
 
@@ -30,7 +30,7 @@ public class CannyEdgeApplication extends Application {
     public void load() {
         BufferedImage image = ImageLoader.getInstance().getImage("hand/dorso.jpg");
         source = new BufferedImageSource(image);
-        screen = new Component(0, 0, image.getWidth(), image.getHeight());
+        screen = new PointFeature(0, 0, image.getWidth(), image.getHeight());
 
         modifier = new CannyEdgeModifier();
         applyModifier();

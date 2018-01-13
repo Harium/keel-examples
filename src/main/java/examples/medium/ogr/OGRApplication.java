@@ -9,7 +9,8 @@ import com.harium.etyl.linear.graph.Graph;
 import com.harium.etyl.linear.graph.Node;
 import com.harium.etyl.linear.graph.WeightEdge;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.modifier.ogr.LetterOGRModifier;
 
@@ -25,10 +26,10 @@ public class OGRApplication extends Application {
 
     private ColorFilter blackFilter;
 
-    private List<Component> blackComponents;
-    private Map<Component, Graph<Integer>> graphs = new HashMap<Component, Graph<Integer>>();
+    private List<PointFeature> blackPointFeatures;
+    private Map<PointFeature, Graph<Integer>> graphs = new HashMap<PointFeature, Graph<Integer>>();
 
-    private Component screen;
+    private Feature screen;
 
     private Color TEXT_COLOR = new Color(87, 85, 86);
 
@@ -50,7 +51,7 @@ public class OGRApplication extends Application {
         image = new BufferedLayer("ogr/pt-sans.png");
         blackFilter = new ColorFilter(w, h, Color.BLACK);
 
-        screen = new Component(0, 0, image.getW(), image.getH());
+        screen = new Feature(image.getW(), image.getH());
 
         loading = 10;
         //Create the image with elements
@@ -68,9 +69,9 @@ public class OGRApplication extends Application {
         source.setImage(image.getBuffer());
 
         //Filter the image
-        blackComponents = blackFilter.filter(source, screen);
+        blackPointFeatures = blackFilter.filter(source, screen);
 
-        for (Component component : blackComponents) {
+        for (PointFeature component : blackPointFeatures) {
             graphs.put(component, ogr.modify(component));
         }
 
@@ -86,9 +87,9 @@ public class OGRApplication extends Application {
 
         //Draw a red line around the black components
 
-        for (int i = 0; i < blackComponents.size(); i++) {
+        for (int i = 0; i < blackPointFeatures.size(); i++) {
 
-            Component component = blackComponents.get(i);
+            PointFeature component = blackPointFeatures.get(i);
 
             g.setStroke(new BasicStroke(3f));
             g.setColor(Color.RED);

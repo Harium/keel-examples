@@ -3,8 +3,9 @@ package examples.basic.geometric;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.classifier.ColorClassifier;
 import com.harium.keel.classifier.PolygonClassifier;
-import com.harium.keel.feature.Component;
-import com.harium.keel.feature.hull.HullComponent;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.feature.hull.HullFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.filter.search.flood.SoftFloodFillSearch;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
@@ -27,11 +28,11 @@ public class ColoredGeometricFormApplication extends Application {
     private BufferedImageSource source = new BufferedImageSource();
 
     private ColorFilter blackFilter;
-    private List<Component> blackComponents;
+    private List<PointFeature> blackPointFeatures;
 
-    private Component screen;
+    private Feature screen;
 
-    private HullModifier<HullComponent> quickHull;
+    private HullModifier<HullFeature> quickHull;
     private PathCompressionModifier pathCompressionModifier;
 
     private List<String> geometryText = new ArrayList<String>();
@@ -46,7 +47,7 @@ public class ColoredGeometricFormApplication extends Application {
 
         loading = 0;
         //Define the area to search for elements
-        screen = new Component(0, 0, w, h);
+        screen = new Feature(0, 0, w, h);
 
         image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
@@ -63,7 +64,7 @@ public class ColoredGeometricFormApplication extends Application {
 
         loading = 20;
         //Filter the image
-        blackComponents = blackFilter.filter(source, screen);
+        blackPointFeatures = blackFilter.filter(source, screen);
 
         loading = 25;
         quickHull = new FastConvexHullModifier();
@@ -72,14 +73,14 @@ public class ColoredGeometricFormApplication extends Application {
 
         loading = 31;
 
-        for (Component component : blackComponents) {
+        for (PointFeature component : blackPointFeatures) {
             classifyRegion(component);
         }
 
         loading = 50;
     }
 
-    private void classifyRegion(Component region) {
+    private void classifyRegion(PointFeature region) {
 
         List<Point2D> list = pathCompressionModifier.modify(quickHull.modify(region));
         //List<Point2D> list = quickHull.modify(region).getPoints();
@@ -158,9 +159,9 @@ public class ColoredGeometricFormApplication extends Application {
 
         //Draw a red line around the black components
 
-        for (int i = 0; i < blackComponents.size(); i++) {
+        for (int i = 0; i < blackPointFeatures.size(); i++) {
 
-            Component component = blackComponents.get(i);
+            PointFeature component = blackPointFeatures.get(i);
 
             g.setStroke(new BasicStroke(3f));
             g.setColor(Color.RED);

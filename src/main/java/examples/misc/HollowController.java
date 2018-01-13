@@ -2,7 +2,7 @@ package examples.misc;
 
 import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Component;
+import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorPointFilter;
 import com.harium.keel.filter.RedLedFilter;
 import com.harium.etyl.commons.context.Application;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class HollowController extends Application implements UpdateIntervalListener {
 
-    private Component screen;
+    private PointFeature screen;
 
     public HollowController(int w, int h) {
         super(w, h);
@@ -34,9 +34,9 @@ public class HollowController extends Application implements UpdateIntervalListe
 
     private ColorPointFilter activeFilter;
 
-    private List<Component> lastButtons;
+    private List<PointFeature> lastButtons;
 
-    private List<Component> components;
+    private List<PointFeature> components;
 
     @Override
     public void load() {
@@ -47,13 +47,13 @@ public class HollowController extends Application implements UpdateIntervalListe
         final int w = cam.getBufferedImage().getWidth();
         final int h = cam.getBufferedImage().getHeight();
 
-        screen = new Component(w, h);
+        screen = new PointFeature(w, h);
 
         //Loading Filters
         ledFilter = new RedLedFilter(w, h);
         activeFilter = new ColorPointFilter(w, h, Color.WHITE);
 
-        lastButtons = new ArrayList<Component>(8);
+        lastButtons = new ArrayList<PointFeature>(8);
 
         loading = 100;
 
@@ -82,9 +82,9 @@ public class HollowController extends Application implements UpdateIntervalListe
 
         activated = false;
 
-        for (Component component : lastButtons) {
+        for (PointFeature component : lastButtons) {
 
-            List<Component> active = activeFilter.filter(source, component);
+            List<PointFeature> active = activeFilter.filter(source, component);
 
             Color color = Color.YELLOW;
 
@@ -115,7 +115,7 @@ public class HollowController extends Application implements UpdateIntervalListe
                     color = Color.BLUE;
                 }
 
-                for (Component component : components) {
+                for (PointFeature component : components) {
                     g.setColor(color);
                     g.drawRect(component.getLayer());
                     /*g.setColor(Color.WHITE);
