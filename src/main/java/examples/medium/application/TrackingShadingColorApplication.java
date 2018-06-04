@@ -12,8 +12,8 @@ import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
-import com.harium.keel.filter.validation.MinDensityValidation;
-import com.harium.keel.filter.validation.MinDimensionValidation;
+import com.harium.keel.filter.validation.point.MinDensityValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

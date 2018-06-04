@@ -4,7 +4,6 @@ import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
-import com.harium.keel.awt.image.filter.ContrastQuickFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -148,7 +147,9 @@ public class PirateHatApplication extends Application {
 
         BufferedImage b = cam.getBufferedImage();
 
-        image = new ContrastQuickFilter(20).process(b);
+        // TODO Change to effect
+        //image = new ContrastQuickFilter(20).process(b);
+        image = b;
 
         int w = image.getWidth();
         int h = image.getHeight();

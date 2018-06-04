@@ -1,12 +1,11 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.filter.color.ColorStrategy;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.layer.Layer;
 import com.harium.etyl.core.graphics.Graphics;
+import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.core.helper.ColorHelper;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -29,8 +28,6 @@ public class CaptchaCleaner extends Application {
     private Color foreColor = null;
 
     private String fileName;
-
-    private ColorStrategy colorStrategy = new ColorStrategy();
 
     public CaptchaCleaner(int w, int h) {
         super(w, h);

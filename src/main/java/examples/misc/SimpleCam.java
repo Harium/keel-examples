@@ -44,11 +44,7 @@ public class SimpleCam extends Application {
         cam = new CameraV4L4J(0);
 
         BufferedImage buffer = cam.getBufferedImage();
-
-        int w = buffer.getWidth();
-        int h = buffer.getHeight();
-
-        screen = new Feature(0, 0, w, h);
+        screen = new Feature(0, 0, buffer.getWidth(), buffer.getHeight());
 
         loadingInfo = "Setting Filter";
 

@@ -5,6 +5,7 @@ import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.color.ColorStrategy;
+import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.flood.FloodFillSearch;
 import com.harium.keel.modifier.EnvelopeModifier;
 import com.harium.etyl.commons.context.Application;
@@ -26,7 +27,7 @@ public class MagicWand extends Application implements UpdateIntervalListener {
 
     private FloodFillSearch cornerFilter;
 
-    private ColorStrategy colorStrategy;
+    private RGBColorStrategy colorStrategy;
 
     private EnvelopeModifier modifier;
 
@@ -61,7 +62,7 @@ public class MagicWand extends Application implements UpdateIntervalListener {
 
         loading = 40;
 
-        colorStrategy = new ColorStrategy(Color.BLACK);
+        colorStrategy = new RGBColorStrategy(Color.BLACK);
         colorStrategy.setTolerance(0x10);
 
         modifier = new EnvelopeModifier();

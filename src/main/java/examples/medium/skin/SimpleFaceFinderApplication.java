@@ -18,7 +18,7 @@ import com.harium.keel.filter.HardColorFilter;
 import com.harium.keel.filter.SkinColorFilter;
 import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
 import com.harium.keel.filter.process.AverageColorFilter;
-import com.harium.keel.filter.validation.MinDimensionValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.*;

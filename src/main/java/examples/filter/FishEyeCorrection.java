@@ -18,11 +18,8 @@ public class FishEyeCorrection extends Etyl {
     }
 
     public Application startApplication() {
-
         initialSetup("../../../../");
-
         return new FishEyeCorrectionApplication(w, h);
-
     }
 
 }
