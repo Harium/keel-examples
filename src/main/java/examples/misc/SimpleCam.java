@@ -1,21 +1,18 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Feature;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.ColorStrategy;
-import com.harium.keel.filter.color.RGBColorStrategy;
-import com.harium.keel.filter.search.TriangularSearch;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.layer.BufferedLayer;
-
-import java.awt.image.BufferedImage;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.color.RGBColorStrategy;
+import com.harium.keel.filter.search.TriangularSearch;
 
 public class SimpleCam extends Application {
 
@@ -41,10 +38,9 @@ public class SimpleCam extends Application {
 
         loadingInfo = "Opening Camera";
 
-        cam = new CameraV4L4J(0);
+        cam = new Webcam();
 
-        BufferedImage buffer = cam.getBufferedImage();
-        screen = new Feature(0, 0, buffer.getWidth(), buffer.getHeight());
+        screen = new Feature(0, 0, cam.getWidth(), cam.getHeight());
 
         loadingInfo = "Setting Filter";
 
@@ -61,9 +57,8 @@ public class SimpleCam extends Application {
 
     @Override
     public void update(long now) {
-
         //Get the Camera image
-        mirror.setBuffer(cam.getBufferedImage());
+        mirror.setBuffer(cam.getImage());
 
         //Normally the camera shows the image flipped, but we want to see something like a mirror
         //So we flip the image

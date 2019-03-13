@@ -1,21 +1,20 @@
 package examples.misc;
 
+import com.harium.etyl.commons.context.Application;
+import com.harium.etyl.commons.event.KeyEvent;
+import com.harium.etyl.commons.graphics.Color;
+import com.harium.etyl.core.graphics.Graphics;
 import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.ColorStrategy;
 import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.color.skin.SkinColorStrategy;
 import com.harium.keel.filter.search.CrossSearch;
 import com.harium.keel.filter.search.TriangularSearch;
 import com.harium.keel.modifier.EnvelopeModifier;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
-import com.harium.etyl.commons.context.Application;
-import com.harium.etyl.commons.event.KeyEvent;
-import com.harium.etyl.commons.graphics.Color;
-import com.harium.etyl.core.graphics.Graphics;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -71,8 +70,8 @@ public class FaceStatic extends Application {
             cam.addImage("skin/skin" + Integer.toString(i) + ".jpg");
         }
 
-        int width = cam.getBufferedImage().getWidth();
-        int height = cam.getBufferedImage().getHeight();
+        int width = cam.getWidth();
+        int height = cam.getHeight();
 
         loadingInfo = "Configuring Filter";
 
@@ -104,7 +103,7 @@ public class FaceStatic extends Application {
         skinFilter.setComponentModifierStrategy(new EnvelopeModifier());
 
         loading = 60;
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
@@ -138,10 +137,10 @@ public class FaceStatic extends Application {
 
         if (event.isKeyDown(KeyEvent.VK_RIGHT_ARROW)) {
             cam.nextFrame();
-            reset(cam.getBufferedImage());
+            reset(cam.getImage());
         } else if (event.isKeyDown(KeyEvent.VK_LEFT_ARROW)) {
             cam.previousFrame();
-            reset(cam.getBufferedImage());
+            reset(cam.getImage());
         }
 
         if (event.isKeyDown(KeyEvent.VK_H)) {
@@ -165,26 +164,26 @@ public class FaceStatic extends Application {
     public void draw(Graphics g) {
 
         if (!hide) {
-            g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+            g.drawImage(cam.getImage(), xOffset, yOffset);
         }
 
         g.setColor(Color.BLUE);
 
         g.setColor(Color.BLACK);
-        g.setLineWidth(2);
+        //g.setLineWidth(2);
         g.drawPolygon(blackPolygon);
 
         g.drawRect(blackSampledFeature.getRectangle());
 
         g.setColor(Color.WHITE);
-        g.setLineWidth(1);
+        //g.setLineWidth(1);
 
         g.setColor(Color.ORANGE);
         g.drawPolygon(whitePolygon);
 
         g.drawRect(lightDirection.getRectangle());
 
-        g.setLineWidth(2);
+        //g.setLineWidth(2);
         for (PointFeature skin : skinFeatures) {
             g.setColor(Color.BLUE_VIOLET);
             g.drawRect(skin.getRectangle());

@@ -1,7 +1,8 @@
 package examples.hard.face;
 
-import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
 import com.harium.etyl.commons.context.Application;
@@ -11,7 +12,6 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.layer.ImageLayer;
-import com.harium.etyl.linear.Point2D;
 
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
@@ -81,8 +81,8 @@ public class PirateHatApplication extends Application {
 
     private void configureSkinFilter() {
 
-        int width = cam.getBufferedImage().getWidth();
-        int height = cam.getBufferedImage().getHeight();
+        int width = cam.getWidth();
+        int height = cam.getHeight();
 
         skinFilter = new TrackingByMultipleColorFilter(width, height);
 
@@ -145,7 +145,7 @@ public class PirateHatApplication extends Application {
 
     private void reset() {
 
-        BufferedImage b = cam.getBufferedImage();
+        BufferedImage b = cam.getImage();
 
         // TODO Change to effect
         //image = new ContrastQuickFilter(20).process(b);
@@ -262,7 +262,8 @@ public class PirateHatApplication extends Application {
         g.setColor(Color.BLUE);
         g.setAlpha(80);
 
-        g.setLineWidth(2);
+
+        //g.setLineWidth(2);
 
         drawFeatures(skinFeatures, g);
 
@@ -330,12 +331,10 @@ public class PirateHatApplication extends Application {
 
             g.drawRect(component.getRectangle());
 
-            g.setLineWidth(1);
+            //g.setLineWidth(1);
 
             for (Point2D point : component.getPoints()) {
-
-                g.fillRect((int) point.getX(), (int) point.getY(), 1, 1);
-
+                g.fillRect((int) point.x, (int) point.y, 1, 1);
             }
 
         }
@@ -444,14 +443,14 @@ public class PirateHatApplication extends Application {
         for (Point2D point : component.getPoints()) {
 
             //Point lower
-            if (point.getY() > centerY) {
+            if (point.y > centerY) {
                 lowerPoints++;
-                lowerX += point.getX();
-                lowerY += point.getY();
+                lowerX += point.x;
+                lowerY += point.y;
             } else {
                 upperPoints++;
-                upperX += point.getX();
-                upperY += point.getY();
+                upperX += point.x;
+                upperY += point.y;
             }
 
         }

@@ -1,5 +1,9 @@
 package examples.basic.geometric;
 
+import com.harium.etyl.commons.context.Application;
+import com.harium.etyl.commons.graphics.Color;
+import com.harium.etyl.core.graphics.Graphics;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.feature.hull.HullFeature;
@@ -8,10 +12,6 @@ import com.harium.keel.filter.search.flood.SoftFloodFillSearch;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
 import com.harium.keel.modifier.hull.HullModifier;
 import com.harium.keel.modifier.hull.PathCompressionModifier;
-import com.harium.etyl.commons.context.Application;
-import com.harium.etyl.commons.graphics.Color;
-import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -83,7 +83,7 @@ public class GeometricFormApplication extends Application {
 
     private void classifyRegion(PointFeature region) {
 
-        List<Point2D> list = pathCompressionModifier.modify(quickHull.modify(region));
+        List<Point2D> list = pathCompressionModifier.apply(quickHull.apply(region));
         //List<Point2D> list = quickHull.modify(region).getPoints();
 
         int numberOfPoints = list.size();
@@ -168,7 +168,7 @@ public class GeometricFormApplication extends Application {
 
             PointFeature component = blackPointFeatures.get(i);
 
-            g.setStroke(new BasicStroke(3f));
+            //g.setStroke(new BasicStroke(3f));
             g.setColor(Color.RED);
             g.drawRect(component.getRectangle());
 
@@ -180,7 +180,7 @@ public class GeometricFormApplication extends Application {
 
             g.drawStringShadow(geometryForm.get(i), component.getRectangle());
 
-            g.setStroke(new BasicStroke(1f));
+            //g.setStroke(new BasicStroke(1f));
 
             for (Point2D point : convexHull.get(i)) {
                 g.setColor(Color.BLACK);

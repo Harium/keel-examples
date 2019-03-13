@@ -1,6 +1,7 @@
 package examples.position.application;
 
 
+import com.github.sarxos.webcam.Webcam;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
@@ -8,8 +9,6 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.layer.BufferedLayer;
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.CameraSarxosWebcam;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.classifier.CircleClassifier;
 import com.harium.keel.feature.Feature;
@@ -35,7 +34,7 @@ public class SphereApplication extends Application {
     List<PointFeature> components;
     Set<PointFeature> circle = new HashSet<>();
 
-    private Camera cam;
+    private Webcam cam;
 
     private boolean hide = false;
 
@@ -58,10 +57,10 @@ public class SphereApplication extends Application {
     }
 
     protected Feature setupCamera() {
-        cam = new CameraSarxosWebcam(0);
+        cam = Webcam.getDefault();
 
-        int w = cam.getBufferedImage().getWidth();
-        int h = cam.getBufferedImage().getHeight();
+        int w = cam.getViewSize().width;
+        int h = cam.getViewSize().height;
 
         screen = new Feature(w, h);
         layer = new BufferedLayer(w, h);
@@ -70,7 +69,7 @@ public class SphereApplication extends Application {
     }
 
     public void update(long now) {
-        updateFrame(cam.getBufferedImage());
+        updateFrame(cam.getImage());
     }
 
     private void updateFrame(BufferedImage bufferedImage) {

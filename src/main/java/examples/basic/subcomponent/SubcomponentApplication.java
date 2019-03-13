@@ -63,7 +63,7 @@ public class SubcomponentApplication extends Application {
 
         modifier = new FastConvexHullModifier();
 
-        HullFeature hull = modifier.modify(whitePointFeatures.get(0));
+        HullFeature hull = modifier.apply(whitePointFeatures.get(0));
 
         List<PointFeature> sub = blackFilter.filter(source, hull);
 
@@ -80,7 +80,7 @@ public class SubcomponentApplication extends Application {
 
         g.setColor(Color.BLACK);
 
-        g.setLineWidth(8);
+        //g.setLineWidth(8);
 
         g.drawLine(40, 40, 140, 40);
         g.drawLine(40, 40, 40, 100);
@@ -91,7 +91,7 @@ public class SubcomponentApplication extends Application {
         g.drawRect(300, 200, 80, 80);
 
         //Draw Subcomponents
-        g.setLineWidth(1);
+        //g.setLineWidth(1);
         g.fillCircle(60, 60, 5);
         g.fillCircle(80, 60, 5);
 
@@ -107,14 +107,14 @@ public class SubcomponentApplication extends Application {
         //Count subPointFeatures
         for (PointFeature component : whitePointFeatures) {
             //Draw a red line around the hull of white components
-            g.setStroke(new BasicStroke(3f));
+            //g.setStroke(new BasicStroke(3f));
             g.setColor(Color.RED);
             g.drawPolygon(PolygonHelper.getBoundingBox(component));
         }
 
         for (List<PointFeature> list : subPointFeatures.values()) {
             for (PointFeature subcomponent : list) {
-                g.setStroke(new BasicStroke(3f));
+                //g.setStroke(new BasicStroke(3f));
                 g.setColor(Color.BLUE_VIOLET);
                 g.drawPolygon(PolygonHelper.getBoundingBox(subcomponent));
             }

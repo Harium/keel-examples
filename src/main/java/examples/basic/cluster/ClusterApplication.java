@@ -1,13 +1,14 @@
 package examples.basic.cluster;
 
-import com.harium.keel.classifier.cluster.Cluster;
-import com.harium.keel.classifier.cluster.DBScan;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
+
+import com.harium.etyl.geometry.Point2D;
+import com.harium.keel.cluster.Cluster;
+import com.harium.keel.cluster.DBScan;
 
 import java.util.HashSet;
 import java.util.List;
@@ -47,17 +48,17 @@ public class ClusterApplication extends Application {
 
         g.setColor(Color.BLACK);
         for (Point2D point : points) {
-            g.drawCircle(point.getX(), point.getY(), 5);
+            g.drawCircle(point.x, point.y, 5);
         }
     }
 
     private void drawClusters(Graphics g) {
-        if (clusters == null)
+        if (clusters == null) {
             return;
+        }
 
         g.setColor(Color.RED);
         for (Cluster cluster : clusters) {
-
 
             List<Point2D> clusterPoints = cluster.getPoints();
             int count = 0;

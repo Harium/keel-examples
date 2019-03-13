@@ -1,7 +1,7 @@
 package examples.medium.application.area;
 
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
+import com.harium.etyl.geometry.Point2D;
 
 import java.awt.Color;
 

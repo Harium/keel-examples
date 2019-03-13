@@ -1,2 +1,3 @@
 # keel-examples
-Examples using Keel and Etyl
+Examples using [Keel](https://github.com/Harium/keel) and [Etyl](https://github.com/Harium/etyl)
+

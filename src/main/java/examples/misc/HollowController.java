@@ -1,7 +1,8 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.CameraV4L4J;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorPointFilter;
 import com.harium.keel.filter.RedLedFilter;
@@ -24,7 +25,7 @@ public class HollowController extends Application implements UpdateIntervalListe
         super(w, h);
     }
 
-    private CameraV4L4J cam;
+    private Camera cam;
 
     private BufferedImage buf;
 
@@ -41,11 +42,11 @@ public class HollowController extends Application implements UpdateIntervalListe
     @Override
     public void load() {
 
-        cam = new CameraV4L4J(0);
-        source.setImage(cam.getBufferedImage());
+        cam = new Webcam();
+        source.setImage(cam.getImage());
 
-        final int w = cam.getBufferedImage().getWidth();
-        final int h = cam.getBufferedImage().getHeight();
+        final int w = cam.getWidth();
+        final int h = cam.getHeight();
 
         screen = new PointFeature(w, h);
 
@@ -75,7 +76,7 @@ public class HollowController extends Application implements UpdateIntervalListe
     @Override
     public void draw(Graphics g) {
 
-        buf = cam.getBufferedImage();
+        buf = cam.getImage();
         source.setImage(buf);
 
         g.drawImage(buf, 0, 0);

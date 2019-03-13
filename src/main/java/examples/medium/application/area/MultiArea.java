@@ -1,9 +1,9 @@
 package examples.medium.application.area;
 
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.PolygonHelper;
 import com.harium.keel.feature.PointFeature;
 import com.harium.etyl.commons.layer.GeometricLayer;
-import com.harium.etyl.linear.Point2D;
 
 import java.awt.*;
 
@@ -53,10 +53,10 @@ public class MultiArea {
             Point2D c1 = cPoints[0];
             Point2D c2 = cPoints[1];
 
-            component.add((int) p1.getX(), (int) p1.getY());
-            component.add((int) p2.getX(), (int) p2.getY());
-            component.add((int) c2.getX(), (int) c2.getY());
-            component.add((int) c1.getX(), (int) c1.getY());
+            component.add((int) p1.x, (int) p1.y);
+            component.add((int) p2.x, (int) p2.y);
+            component.add((int) c2.x, (int) c2.y);
+            component.add((int) c1.x, (int) c1.y);
 
             layers[i] = component.getLayer();
             polygons[i] = PolygonHelper.getPolygon(component);

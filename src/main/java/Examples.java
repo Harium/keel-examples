@@ -66,9 +66,6 @@ public class Examples extends Etyl {
         //return new CaptchaCleaner(w,h);
 
         return new SkinGraphic(w, h);
-
-        //return new OGRApplication(w,h);
-
     }
 
 }

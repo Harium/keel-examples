@@ -4,9 +4,10 @@ import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
-import com.harium.keel.awt.camera.CameraV4L4J;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.color.RGBColorStrategy;
@@ -20,7 +21,7 @@ import java.util.List;
 
 public class FaceSampledReal extends Application {
 
-    private CameraV4L4J cam;
+    private Camera cam;
     private BufferedImageSource source = new BufferedImageSource();
 
     private CrossSearch colorFilter = new CrossSearch();
@@ -48,9 +49,9 @@ public class FaceSampledReal extends Application {
 
         loadingInfo = "Loading Images";
 
-        cam = new CameraV4L4J(0);
+        cam = new Webcam();
 
-        screen = new Feature(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
+        screen = new Feature(cam.getImage().getWidth(), cam.getImage().getHeight());
 
         RGBColorStrategy colorStrategy = new RGBColorStrategy(Color.BLACK);
         colorFilter.setSelectionStrategy(colorStrategy);
@@ -63,7 +64,7 @@ public class FaceSampledReal extends Application {
         loadingInfo = "Configuring Filter";
 
         loading = 60;
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
@@ -76,10 +77,10 @@ public class FaceSampledReal extends Application {
         sampledPolygon.reset();
 
         //TODO Separate polygons
-        List<Point2D> points = quickHull.modify(sampledFeature).getPoints();
+        List<Point2D> points = quickHull.apply(sampledFeature).getPoints();
 
         for (Point2D point : points) {
-            sampledPolygon.addPoint((int) point.getX(), (int) point.getY());
+            sampledPolygon.addPoint((int) point.x, (int) point.y);
         }
     }
 
@@ -105,7 +106,7 @@ public class FaceSampledReal extends Application {
 
             Point2D q = points.get(i);
 
-            if (insideCircle((int) pt.getX(), (int) pt.getY(), radius, (int) q.getX(), (int) q.getY())) {
+            if (insideCircle((int) pt.x, (int) pt.y, radius, (int) q.x, (int) q.y)) {
                 currentPointFeature.add(q);
                 points.remove(i);
                 continue;
@@ -146,10 +147,10 @@ public class FaceSampledReal extends Application {
     public void draw(Graphics g) {
 
         if (!hide) {
-            g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+            g.drawImage(cam.getImage(), xOffset, yOffset);
         }
 
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         g.setAlpha(60);
         //drawFeaturedPoints(g, sampledFeature, Color.GREEN);
@@ -162,13 +163,13 @@ public class FaceSampledReal extends Application {
 
     private void drawFeaturedPoints(Graphics g, PointFeature feature, Color color) {
 
-        for (Point2D ponto : feature.getPoints()) {
+        for (Point2D point : feature.getPoints()) {
 
             g.setColor(color);
-            g.fillCircle(xOffset + (int) ponto.getX(), yOffset + (int) ponto.getY(), 5);
+            g.fillCircle(xOffset + (int) point.x, yOffset + (int) point.y, 5);
 
             //g.setColor(Color.WHITE);
-            //g.drawCircle(xOffset+(int)ponto.getX(), yOffset+(int)ponto.getY(), 18);
+            //g.drawCircle(xOffset+(int)ponto.x, yOffset+(int)ponto.y, 18);
 
         }
 

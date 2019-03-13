@@ -37,7 +37,7 @@ public class Cell extends Layer {
         g.fillCircle(cx, cy, (int) (radius / 2 * zoom));
 
         //Draw Border
-        g.setLineWidth(borderWidth * zoom);
+        //g.setLineWidth(borderWidth * zoom);
         g.drawCircle(cx, cy, (int) (radius * zoom));
 
         g.setOpacity(255);

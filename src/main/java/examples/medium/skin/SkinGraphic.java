@@ -7,7 +7,7 @@ import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.commons.layer.Layer;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Ellipse;
+import com.harium.etyl.geometry.Ellipse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +56,7 @@ public class SkinGraphic extends Application {
 
         for (int j = 0; j < 256; j++) {
             for (int i = 0; i < 256; i++) {
-                if (SKIN_ELLIPSE.colideEllipsePoint(i, j)) {
+                if (SKIN_ELLIPSE.collidePoint(i, j)) {
                     mask[j][i] = true;
                 }
             }
@@ -653,7 +653,7 @@ public class SkinGraphic extends Application {
         my = event.getY();
 
         for (SkinPoint point : good) {
-            if (point.colideCirclePoint(mx, my)) {
+            if (point.collideCirclePoint(mx, my)) {
                 point.setOver(true);
             } else {
                 point.setOver(false);
@@ -667,7 +667,7 @@ public class SkinGraphic extends Application {
 
             for (SkinPoint ponto : good) {
 
-                if (ponto.colideCirclePoint(mx, my)) {
+                if (ponto.collideCirclePoint(mx, my)) {
                     ponto.setOver(true);
                     System.out.print("R = " + ponto.getR());
                     System.out.print(" G = " + ponto.getG());

@@ -1,23 +1,23 @@
 package examples.medium.application;
 
-import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.Feature;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.ColorFilter;
-import com.harium.keel.filter.validation.point.MaxDimensionValidation;
-import com.harium.keel.filter.validation.point.MinDensityValidation;
-import com.harium.keel.filter.validation.point.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.etyl.layer.BufferedLayer;
-import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.PolygonHelper;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.ColorFilter;
+import com.harium.keel.filter.validation.point.MaxDimensionValidation;
+import com.harium.keel.filter.validation.point.MinDensityValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 import examples.medium.application.area.AreaDrawer;
 
 import java.awt.image.BufferedImage;
@@ -81,16 +81,16 @@ public class TrackingCameraColorApplication extends Application {
         loadingInfo = "Configuring Filter";
 
         loading = 60;
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
 
     protected Feature setupCamera() {
-        cam = new CameraV4L4J(0);
+        cam = new Webcam();
 
-        int w = cam.getBufferedImage().getWidth();
-        int h = cam.getBufferedImage().getHeight();
+        int w = cam.getWidth();
+        int h = cam.getHeight();
 
         screen = new Feature(w, h);
         layer = new BufferedLayer(w, h);
@@ -119,8 +119,8 @@ public class TrackingCameraColorApplication extends Application {
 
             for (PointFeature component : bluePointFeatures) {
                 Point2D p = component.getCenter();
-                bx += p.getX();
-                by += p.getY();
+                bx += p.x;
+                by += p.y;
 
                 bRadius += (component.getW() + component.getH()) / 4;
             }
@@ -198,7 +198,7 @@ public class TrackingCameraColorApplication extends Application {
             g.drawImage(layer.getBuffer(), xOffset, yOffset);
         }
 
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         if (pixels) {
 

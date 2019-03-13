@@ -1,5 +1,6 @@
 package examples.basic.geometric;
 
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.classifier.ColorClassifier;
 import com.harium.keel.classifier.PolygonClassifier;
@@ -14,7 +15,6 @@ import com.harium.keel.modifier.hull.PathCompressionModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -82,11 +82,11 @@ public class ColoredGeometricFormApplication extends Application {
 
     private void classifyRegion(PointFeature region) {
 
-        List<Point2D> list = pathCompressionModifier.modify(quickHull.modify(region));
+        List<Point2D> list = pathCompressionModifier.apply(quickHull.apply(region));
         //List<Point2D> list = quickHull.modify(region).getPoints();
 
         Point2D center = region.getCenter();
-        Color color = new Color(image.getRGB((int) center.getX(), (int) center.getY()));
+        Color color = new Color(image.getRGB((int) center.x, (int) center.y));
 
         String colorText = ColorClassifier.getColorName(color.getRed(), color.getGreen(), color.getBlue());
 
@@ -163,7 +163,7 @@ public class ColoredGeometricFormApplication extends Application {
 
             PointFeature component = blackPointFeatures.get(i);
 
-            g.setStroke(new BasicStroke(3f));
+            //g.setStroke(new BasicStroke(3f));
             g.setColor(Color.RED);
             g.drawRect(component.getRectangle());
 
@@ -171,7 +171,7 @@ public class ColoredGeometricFormApplication extends Application {
 
             g.drawStringShadow(geometryText.get(i), component.getRectangle());
 
-            g.setStroke(new BasicStroke(1f));
+            //g.setStroke(new BasicStroke(1f));
 
             for (Point2D point : convexHull.get(i)) {
                 g.setColor(Color.BLACK);

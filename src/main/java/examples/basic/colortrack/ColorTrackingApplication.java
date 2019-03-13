@@ -90,14 +90,14 @@ public class ColorTrackingApplication extends Application {
 		
 		//Draw a red line around the black components
 		for(PointFeature component: blackPointFeatures) {
-			g.setStroke(new BasicStroke(3f));
+			//g.setStroke(new BasicStroke(3f));
 			g.setColor(Color.RED);
 			g.drawPolygon(PolygonHelper.getBoundingBox(component));
 		}
 		
 		//Draw a yellow line around the blue components
 		for(PointFeature component: bluePointFeatures) {
-			g.setStroke(new BasicStroke(3f));
+			//g.setStroke(new BasicStroke(3f));
 			g.setColor(Color.YELLOW);
 			g.drawRect(component.getRectangle());
 		}

@@ -6,10 +6,10 @@ import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.core.Filter;
 import com.harium.keel.core.helper.ColorHelper;
 import com.harium.keel.feature.Feature;
@@ -96,7 +96,7 @@ public class SimpleSkinStrategyApplication extends Application {
             int x = event.getX();
             int y = event.getY();
 
-            BufferedImage buffer = cam.getBufferedImage();
+            BufferedImage buffer = cam.getImage();
 
             if (x < buffer.getWidth() && y < buffer.getHeight()) {
 
@@ -112,8 +112,8 @@ public class SimpleSkinStrategyApplication extends Application {
 
     protected void reset() {
         //Define the area to search for elements
-        int w = cam.getBufferedImage().getWidth();
-        int h = cam.getBufferedImage().getHeight();
+        int w = cam.getImage().getWidth();
+        int h = cam.getImage().getHeight();
 
         screen = new Feature(w, h);
         skinFilter = new SkinColorFilter(w, h, new SkinColorKovacNewStrategy());
@@ -125,7 +125,7 @@ public class SimpleSkinStrategyApplication extends Application {
         //Remove components smaller than 20x20
         skinFilter.addValidation(new MinDimensionValidation(20));
 
-        source.setImage(cam.getBufferedImage());
+        source.setImage(cam.getImage());
         skinPointFeatures = skinFilter.filter(source, screen);
 
         color = randomColor();
@@ -141,7 +141,7 @@ public class SimpleSkinStrategyApplication extends Application {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(cam.getBufferedImage(), 0, 0);
+        g.drawImage(cam.getImage(), 0, 0);
 
         //Draw a red line around the components
         drawPointFeatures(g);
@@ -163,11 +163,11 @@ public class SimpleSkinStrategyApplication extends Application {
                 for (Point2D point : component.getPoints()) {
 
                     if (leftPoints) {
-                        if (point.getX() < w / 2) {
-                            g.fillRect((int) point.getX(), (int) point.getY(), 1, 1);
+                        if (point.x < w / 2) {
+                            g.fillRect((int) point.x, (int) point.y, 1, 1);
                         }
-                    } else if (point.getX() >= w / 2) {
-                        g.fillRect((int) point.getX(), (int) point.getY(), 1, 1);
+                    } else if (point.x >= w / 2) {
+                        g.fillRect((int) point.x, (int) point.y, 1, 1);
                     }
                 }
             }

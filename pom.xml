@@ -16,17 +16,22 @@
         <dependency>
             <groupId>com.harium.keel</groupId>
             <artifactId>core</artifactId>
-            <version>1.2.5</version>
+            <version>1.5.2</version>
         </dependency>
         <dependency>
             <groupId>com.harium.keel</groupId>
             <artifactId>keel-awt</artifactId>
-            <version>1.2.3</version>
+            <version>1.4.0</version>
         </dependency>
         <dependency>
             <groupId>com.harium.etyl</groupId>
             <artifactId>etyl</artifactId>
-            <version>1.2.0</version>
+            <version>1.4.4</version>
+        </dependency>
+        <dependency>
+            <groupId>com.harium.etyl</groupId>
+            <artifactId>geometry</artifactId>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>com.github.sarxos</groupId>
@@ -36,7 +41,7 @@
         <dependency>
             <groupId>com.github.sarxos</groupId>
             <artifactId>webcam-capture</artifactId>
-            <version>0.3.11</version>
+            <version>0.3.12</version>
         </dependency>
         <dependency>
             <groupId>com.nativelibs4java</groupId>

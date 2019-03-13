@@ -1,5 +1,6 @@
 package examples.modifiers.edge;
 
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.core.source.ImageSource;
 import com.harium.keel.feature.PointFeature;
@@ -8,7 +9,6 @@ import com.harium.keel.modifier.edge.EdgeModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
 import com.harium.etyl.loader.image.ImageLoader;
 
 import java.awt.image.BufferedImage;
@@ -47,7 +47,7 @@ public class CannyEdgeApplication extends Application {
 
         g.setColor(Color.WHITE);
         for (Point2D point : result) {
-            g.fillRect((int) point.getX(), (int) point.getY(), 1, 1);
+            g.fillRect((int) point.x, (int) point.y, 1, 1);
         }
     }
 

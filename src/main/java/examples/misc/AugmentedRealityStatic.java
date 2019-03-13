@@ -5,9 +5,9 @@ import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
-import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.core.strategy.ComponentModifierStrategy;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
@@ -45,7 +45,6 @@ public class AugmentedRealityStatic extends Application {
 
     @Override
     public void load() {
-
         loadingInfo = "Loading Images";
 
         cam = new FakeCamera();
@@ -60,9 +59,8 @@ public class AugmentedRealityStatic extends Application {
 
         loadingInfo = "Configuring Filter";
 
-        int width = cam.getBufferedImage().getWidth();
-
-        int height = cam.getBufferedImage().getHeight();
+        int width = cam.getWidth();
+        int height = cam.getHeight();
 
         loading = 40;
 
@@ -86,7 +84,7 @@ public class AugmentedRealityStatic extends Application {
 
         feature = new PointFeature(0, 0, w, h);
 
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
@@ -113,11 +111,9 @@ public class AugmentedRealityStatic extends Application {
     public void updateKeyboard(KeyEvent event) {
 
         if (event.isKeyDown(KeyEvent.VK_RIGHT)) {
-            cam.nextFrame();
-            reset(cam.getBufferedImage());
+            reset(cam.nextFrame());
         } else if (event.isKeyDown(KeyEvent.VK_LEFT)) {
-            cam.previousFrame();
-            reset(cam.getBufferedImage());
+            reset(cam.previousFrame());
         }
 
         if (event.isKeyDown(KeyEvent.VK_H)) {
@@ -132,12 +128,12 @@ public class AugmentedRealityStatic extends Application {
     @Override
     public void draw(Graphics g) {
 
-        g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+        g.drawImage(cam.getImage(), xOffset, yOffset);
 
         g.setColor(Color.BLUE);
 
-        for (Point2D ponto : feature.getPoints()) {
-            g.fillCircle(xOffset + (int) ponto.getX(), yOffset + (int) ponto.getY(), 5);
+        for (Point2D point : feature.getPoints()) {
+            g.fillCircle(xOffset + (int) point.x, yOffset + (int) point.y, 5);
         }
 
         int textHeight = 25;
@@ -166,11 +162,11 @@ public class AugmentedRealityStatic extends Application {
         Point2D c = box.getPoints().get(2);
         Point2D d = box.getPoints().get(3);
 
-        Point2D ac = new Point2D((a.getX() + c.getX()) / 2, (a.getY() + c.getY()) / 2);
-        Point2D ab = new Point2D((a.getX() + b.getX()) / 2, (a.getY() + b.getY()) / 2);
+        Point2D ac = new Point2D((a.x + c.x) / 2, (a.y + c.y) / 2);
+        Point2D ab = new Point2D((a.x + b.x) / 2, (a.y + b.y) / 2);
 
-        Point2D bd = new Point2D((b.getX() + d.getX()) / 2, (b.getY() + d.getY()) / 2);
-        Point2D cd = new Point2D((c.getX() + d.getX()) / 2, (c.getY() + d.getY()) / 2);
+        Point2D bd = new Point2D((b.x + d.x) / 2, (b.y + d.y) / 2);
+        Point2D cd = new Point2D((c.x + d.x) / 2, (c.y + d.y) / 2);
 
         drawLine(g, a, b);
         drawLine(g, a, c);
@@ -198,20 +194,20 @@ public class AugmentedRealityStatic extends Application {
         drawPoint(g, box.getCenter());
 
         g.setColor(Color.BLACK);
-        g.drawString("A", xOffset + (int) a.getX() - 20, yOffset + (int) a.getY() - 10);
-        g.drawString("B", xOffset + (int) b.getX() + 15, yOffset + (int) b.getY() - 10);
+        g.drawString("A", xOffset + (int) a.x - 20, yOffset + (int) a.y - 10);
+        g.drawString("B", xOffset + (int) b.x + 15, yOffset + (int) b.y - 10);
 
-        g.drawString("C", xOffset + (int) c.getX() - 20, yOffset + (int) c.getY() + 10);
-        g.drawString("D", xOffset + (int) d.getX() + 15, yOffset + (int) d.getY() + 10);
+        g.drawString("C", xOffset + (int) c.x - 20, yOffset + (int) c.y + 10);
+        g.drawString("D", xOffset + (int) d.x + 15, yOffset + (int) d.y + 10);
 
     }
 
     private void drawLine(Graphics g, Point2D a, Point2D b) {
-        g.drawLine(xOffset + (int) a.getX(), yOffset + (int) a.getY(), xOffset + (int) b.getX(), yOffset + (int) b.getY());
+        g.drawLine(xOffset + (int) a.x, yOffset + (int) a.y, xOffset + (int) b.x, yOffset + (int) b.y);
     }
 
     private void drawPoint(Graphics g, Point2D point) {
-        g.fillCircle(xOffset + (int) point.getX(), yOffset + (int) point.getY(), 3);
+        g.fillCircle(xOffset + (int) point.x, yOffset + (int) point.y, 3);
     }
 
 }

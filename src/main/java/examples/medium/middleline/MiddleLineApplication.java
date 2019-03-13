@@ -1,22 +1,22 @@
 package examples.medium.middleline;
 
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.modifier.MiddleLineModifier;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
-import com.harium.etyl.linear.graph.GenericEdge;
-import com.harium.etyl.linear.graph.Graph;
-import com.harium.etyl.linear.graph.Node;
+import com.harium.etyl.geometry.Point2D;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.modifier.MiddleLineModifier;
+import com.harium.storage.graph.GenericEdge;
+import com.harium.storage.graph.Graph;
+import com.harium.storage.graph.Node;
 
 public class MiddleLineApplication extends Application {
 
     private PointFeature component;
 
-    private Graph<Integer> graph;
+    private Graph<Point2D> graph;
 
     private MiddleLineModifier modifier;
 
@@ -49,7 +49,7 @@ public class MiddleLineApplication extends Application {
 
         modifier = new MiddleLineModifier();
 
-        graph = modifier.modify(component);
+        graph = modifier.apply(component);
 
         loading = 100;
     }
@@ -77,19 +77,16 @@ public class MiddleLineApplication extends Application {
 
         g.setColor(Color.BLUE);
 
-        for (GenericEdge<Integer> edge : graph.getEdges()) {
-            g.drawLine(edge.getOrigin().getPoint(), edge.getDestination().getPoint());
+        for (GenericEdge<Point2D> edge : graph.getEdges()) {
+            g.drawLine(edge.getOrigin().getData(), edge.getDestination().getData());
         }
 
-        for (Node<Integer> node : graph.getNodes()) {
-
+        for (Node<Point2D> node : graph.getNodes()) {
             g.setColor(Color.WHITE);
-
-            g.fillCircle(node.getPoint(), 5);
+            g.fillCircle(node.getData(), 5);
 
             g.setColor(Color.BLACK);
-
-            g.drawCircle(node.getPoint(), 5);
+            g.drawCircle(node.getData(), 5);
         }
 
     }
@@ -119,7 +116,7 @@ public class MiddleLineApplication extends Application {
             Point2D b = component.getPoints().get(i + 1);
 
             String text = MiddleLineModifier.classify(a, b).toString();
-            g.drawStringShadow(text, (int) (a.getX() + b.getX()) / 2, (int) (a.getY() + b.getY()) / 2);
+            g.drawStringShadow(text, (int) (a.x + b.x) / 2, (int) (a.y + b.y) / 2);
         }
 
         g.drawLine(lastPoint, firstPoint);

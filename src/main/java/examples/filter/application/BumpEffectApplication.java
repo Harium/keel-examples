@@ -3,11 +3,10 @@ package examples.filter.application;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.util.PathHelper;
-import com.harium.keel.awt.export.BufferedImageExporter;
+import com.harium.keel.awt.BufferedImageExporter;
 import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.core.effect.SobelBumpMapEffect;
 import com.harium.keel.core.source.ImageSource;
-import com.harium.keel.core.effect.SimpleBumpMapEffect;
+import com.harium.keel.effect.normal.SobelNormalMap;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -33,7 +32,7 @@ public class BumpEffectApplication extends Application {
 
         // Effect Pipeline
         BufferedImageSource source = new BufferedImageSource(layer);
-        SobelBumpMapEffect effect = new SobelBumpMapEffect();
+        SobelNormalMap effect = new SobelNormalMap();
         ImageSource output = effect.apply(source);
         BufferedImageExporter exporter = new BufferedImageExporter();
         bump = exporter.export(output);

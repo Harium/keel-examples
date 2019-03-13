@@ -56,7 +56,7 @@ public class EmptyNeubauerApplication extends Application {
         g.setColor(background);
         g.fillRect(0, 0, w, h);
 
-        g.setLineWidth(1f);
+        //g.setLineWidth(1f);
 
         g.setColor(Color.WHITE);
 
@@ -88,7 +88,7 @@ public class EmptyNeubauerApplication extends Application {
 
     private void drawStrongLines(Graphics g, int spacing005mm) {
 
-        g.setLineWidth(1f);
+        //g.setLineWidth(1f);
 
         for (int i = 0; i < 4; i++) {
 

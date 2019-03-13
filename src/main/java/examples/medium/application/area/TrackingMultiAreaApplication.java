@@ -1,21 +1,20 @@
 package examples.medium.application.area;
 
-import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.core.helper.ColorHelper;
-import com.harium.keel.feature.Feature;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.ColorFilter;
-import com.harium.keel.filter.search.flood.SoftFloodFillSearch;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
+import com.harium.etyl.geometry.Point2D;
+import com.harium.keel.awt.PolygonHelper;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.FakeCamera;
+import com.harium.keel.core.helper.ColorHelper;
+import com.harium.keel.feature.Feature;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.filter.validation.point.MaxDimensionValidation;
 import com.harium.keel.filter.validation.point.MinDensityValidation;
 import com.harium.keel.filter.validation.point.MinDimensionValidation;
@@ -97,7 +96,7 @@ public class TrackingMultiAreaApplication extends Application {
         loadingInfo = "Configuring Filter";
 
         loading = 60;
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
@@ -109,8 +108,8 @@ public class TrackingMultiAreaApplication extends Application {
         cam.addImage("dumbbells/dumbbells2.png");*/
         ((FakeCamera) cam).addImage("dumbbells/dumbbells5.png");
 
-        int w = cam.getBufferedImage().getWidth();
-        int h = cam.getBufferedImage().getHeight();
+        int w = cam.getWidth();
+        int h = cam.getHeight();
 
         screen = new Feature(w, h);
 
@@ -149,7 +148,7 @@ public class TrackingMultiAreaApplication extends Application {
 
                     for (Point2D p : component.getPoints()) {
                         Polygon polygon = area.getPolygons()[i];
-                        if (polygon.contains(p.getX(), p.getY())) {
+                        if (polygon.contains(p.x, p.y)) {
                             count++;
                         }
                     }
@@ -201,7 +200,7 @@ public class TrackingMultiAreaApplication extends Application {
 
     private boolean hasCenterColor(PointFeature component, BufferedImage b) {
         Point2D center = component.getCenter();
-        int rgb = b.getRGB((int) center.getX(), (int) center.getY());
+        int rgb = b.getRGB((int) center.x, (int) center.y);
         return ColorHelper.isColor(orangeFilter.getColor(), rgb, 8);
     }
 
@@ -285,7 +284,7 @@ public class TrackingMultiAreaApplication extends Application {
     @Override
     public void draw(Graphics g) {
 
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         if (!hide) {
             g.drawImage(buffer, xOffset, yOffset);

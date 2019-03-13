@@ -1,13 +1,13 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.FakeCamera;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.custom.BarCodeFilter;
-import com.harium.keel.feature.PointFeature;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
+import com.harium.etyl.geometry.Point2D;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.FakeCamera;
+import com.harium.keel.custom.BarCodeFilter;
+import com.harium.keel.feature.PointFeature;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -48,9 +48,9 @@ public class BarCodeExample extends Application {
         loading = 25;
         loadingInfo = "Configuring Filter";
 
-        filter = new BarCodeFilter(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
+        filter = new BarCodeFilter(cam.getWidth(), cam.getHeight());
 
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
@@ -73,10 +73,10 @@ public class BarCodeExample extends Application {
 
         if (event.isKeyDown(KeyEvent.VK_RIGHT_ARROW)) {
             cam.nextFrame();
-            reset(cam.getBufferedImage());
+            reset(cam.getImage());
         } else if (event.isKeyDown(KeyEvent.VK_LEFT_ARROW)) {
             cam.previousFrame();
-            reset(cam.getBufferedImage());
+            reset(cam.getImage());
         }
 
         if (event.isKeyDown(KeyEvent.VK_H)) {
@@ -92,9 +92,9 @@ public class BarCodeExample extends Application {
     @Override
     public void draw(Graphics g) {
 
-        g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+        g.drawImage(cam.getImage(), xOffset, yOffset);
 
-        g.drawImage(cam.getBufferedImage(), xOffset, yOffset + 200);
+        g.drawImage(cam.getImage(), xOffset, yOffset + 200);
 
         int offset = 1;
         for (PointFeature feature : result) {
@@ -102,9 +102,7 @@ public class BarCodeExample extends Application {
             drawBox(g, feature, offset % 2 * 20);
 
             offset++;
-
         }
-
     }
 
     private void drawBox(Graphics g, PointFeature box, int downOffset) {
@@ -116,11 +114,11 @@ public class BarCodeExample extends Application {
         Point2D c = box.getPoints().get(2);
         Point2D d = box.getPoints().get(3);
 
-        Point2D ac = new Point2D((a.getX() + c.getX()) / 2, (a.getY() + c.getY()) / 2);
-        Point2D ab = new Point2D((a.getX() + b.getX()) / 2, (a.getY() + b.getY()) / 2);
+        Point2D ac = new Point2D((a.x + c.x) / 2, (a.y + c.y) / 2);
+        Point2D ab = new Point2D((a.x + b.x) / 2, (a.y + b.y) / 2);
 
-        Point2D bd = new Point2D((b.getX() + d.getX()) / 2, (b.getY() + d.getY()) / 2);
-        Point2D cd = new Point2D((c.getX() + d.getX()) / 2, (c.getY() + d.getY()) / 2);
+        Point2D bd = new Point2D((b.x + d.x) / 2, (b.y + d.y) / 2);
+        Point2D cd = new Point2D((c.x + d.x) / 2, (c.y + d.y) / 2);
 
         drawLine(g, a, b);
         drawLine(g, a, c);
@@ -146,16 +144,16 @@ public class BarCodeExample extends Application {
 
         g.setColor(Color.BLACK);
 
-        g.drawString(Integer.toString((int) (d.getX() - a.getX())), xOffset + (int) d.getX() - 12, yOffset + (int) d.getY() + 20 + downOffset);
+        g.drawString(Integer.toString((int) (d.x - a.x)), xOffset + (int) d.x - 12, yOffset + (int) d.y + 20 + downOffset);
 
     }
 
     private void drawLine(Graphics g, Point2D a, Point2D b) {
-        g.drawLine(xOffset + (int) a.getX(), yOffset + (int) a.getY(), xOffset + (int) b.getX(), yOffset + (int) b.getY());
+        g.drawLine(xOffset + (int) a.x, yOffset + (int) a.y, xOffset + (int) b.x, yOffset + (int) b.y);
     }
 
     private void drawPoint(Graphics g, Point2D point) {
-        g.fillCircle(xOffset + (int) point.getX(), yOffset + (int) point.getY(), 3);
+        g.fillCircle(xOffset + (int) point.x, yOffset + (int) point.y, 3);
     }
 
 }

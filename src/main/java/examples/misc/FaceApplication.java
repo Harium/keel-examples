@@ -1,16 +1,17 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.ColorPointFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.commons.layer.Layer;
 import com.harium.etyl.core.graphics.Graphics;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.etyl.layer.ImageLayer;
-import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.ColorPointFilter;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class FaceApplication extends Application {
         super(w, h);
     }
 
-    private CameraV4L4J cam;
+    private Camera cam;
 
     private Layer lastFace;
 
@@ -39,10 +40,10 @@ public class FaceApplication extends Application {
     @Override
     public void load() {
 
-        cam = new CameraV4L4J(0);
+        cam = new Webcam();
 
-        int w = cam.getBufferedImage().getWidth();
-        int h = cam.getBufferedImage().getHeight();
+        int w = cam.getWidth();
+        int h = cam.getHeight();
 
         screen = new PointFeature(w, h);
 
@@ -99,7 +100,7 @@ public class FaceApplication extends Application {
     @Override
     public void draw(Graphics g) {
 
-        buf = new BufferedImageSource(cam.getBufferedImage());
+        buf = new BufferedImageSource(cam.getImage());
 
         g.drawImage(buf.getImage(), 0, 0);
 
@@ -114,7 +115,7 @@ public class FaceApplication extends Application {
             //TODO Draw Pixels
             g.setColor(Color.GREEN);
             for (Point2D point : component.getPoints()) {
-                g.drawRect(point.getX(), point.getY(), 1, 1);
+                g.drawRect(point.x, point.y, 1, 1);
             }
 
             //TODO Write Number of Points
@@ -128,7 +129,7 @@ public class FaceApplication extends Application {
 
             g.setColor(Color.BLUE);
             for (Point2D point : component.getPoints()) {
-                g.drawRect(point.getX(), point.getY(), 1, 1);
+                g.drawRect(point.x, point.y, 1, 1);
             }
 
             //TODO Write Number of Points

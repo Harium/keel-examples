@@ -6,10 +6,10 @@ import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.awt.camera.FakeCamera;
 import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ColorFilter;
 import com.harium.keel.filter.validation.point.MinDensityValidation;
@@ -70,7 +70,7 @@ public class TrackingShadingColorApplication extends Application {
         loadingInfo = "Configuring Filter";
 
         loading = 60;
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
 
         loading = 100;
     }
@@ -82,8 +82,8 @@ public class TrackingShadingColorApplication extends Application {
             cam.addImage("dumbbells/dumbbells" + Integer.toString(i) + ".png");
         }
 
-        int w = cam.getBufferedImage().getWidth();
-        int h = cam.getBufferedImage().getHeight();
+        int w = cam.getWidth();
+        int h = cam.getHeight();
 
         screen = new PointFeature(0, 0, w, h);
 
@@ -108,8 +108,8 @@ public class TrackingShadingColorApplication extends Application {
 
             for (PointFeature component : bluePointFeatures) {
                 Point2D p = component.getCenter();
-                bx += p.getX();
-                by += p.getY();
+                bx += p.x;
+                by += p.y;
 
                 bRadius += (component.getW() + component.getH()) / 4;
             }
@@ -138,7 +138,7 @@ public class TrackingShadingColorApplication extends Application {
     }
 
     private Color pickColor(int px, int py) {
-        return new Color(cam.getBufferedImage().getRGB(px, py));
+        return new Color(cam.getImage().getRGB(px, py));
     }
 
     @Override
@@ -190,7 +190,7 @@ public class TrackingShadingColorApplication extends Application {
     public void draw(Graphics g) {
 
         if (!hide) {
-            g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+            g.drawImage(cam.getImage(), xOffset, yOffset);
         }
 
         g.setColor(color);
@@ -200,7 +200,7 @@ public class TrackingShadingColorApplication extends Application {
 
         if (markers) {
 
-            reset(cam.getBufferedImage());
+            reset(cam.getImage());
 
             g.drawString("Tol: " + Integer.toString(tolerance), 10, 80);
             g.drawString("Den: " + Integer.toString(minDensity), 10, 100);

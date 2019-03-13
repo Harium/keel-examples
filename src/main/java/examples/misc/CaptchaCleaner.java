@@ -4,7 +4,7 @@ import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.layer.Layer;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.keel.awt.camera.FakeCamera;
+import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.core.helper.ColorHelper;
 
 import javax.imageio.ImageIO;
@@ -42,14 +42,14 @@ public class CaptchaCleaner extends Application {
 
         if (event.isKeyDown(KeyEvent.VK_RIGHT_ARROW)) {
             cam.nextFrame();
-            fileName = "captcha" + Integer.toString(cam.getCurrentFrame());
-            reset(fileName);
+            fileName = "captcha_" + cam.getCursor();
+            reset();
         }
 
         if (event.isKeyDown(KeyEvent.VK_LEFT_ARROW)) {
             cam.previousFrame();
-            fileName = "captcha" + Integer.toString(cam.getCurrentFrame());
-            reset(fileName);
+            fileName = "captcha_" + cam.getCursor();
+            reset();
         }
     }
 
@@ -83,19 +83,19 @@ public class CaptchaCleaner extends Application {
 
         }
 
-        reset(fileName);
+        reset();
 
         loading = 100;
     }
 
-    private void reset(String fileName) {
+    private void reset() {
 
         backColor = null;
         foreColor = null;
 
         loading = 10;
 
-        b = cam.getBufferedImage();
+        b = cam.getImage();
 
         int w = b.getWidth();
         int h = b.getHeight();

@@ -1,13 +1,13 @@
 package examples.misc;
 
+import com.github.sarxos.webcam.Webcam;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
-import com.harium.keel.awt.camera.CameraV4L4J;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.custom.gesture.GestureRegex;
 import com.harium.keel.custom.gesture.PolygonMatcher;
@@ -24,7 +24,7 @@ import java.util.List;
 
 public class AirWrite extends Application {
 
-    private CameraV4L4J cam;
+    private Webcam cam;
     private BufferedImageSource source = new BufferedImageSource();
 
     private ColoredPointSearch colorFilter;
@@ -61,9 +61,11 @@ public class AirWrite extends Application {
 
         loadingInfo = "Open Camera";
 
-        cam = new CameraV4L4J(0);
+        cam = Webcam.getDefault();
+        int width = cam.getViewSize().width;
+        int height = cam.getViewSize().height;
 
-        screen = new Feature(0, 0, cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight());
+        screen = new Feature(0, 0, width, height);
 
         loadingInfo = "Setting PolygonMatcher";
         matcher.setMinDistance(8);
@@ -72,7 +74,7 @@ public class AirWrite extends Application {
 
         colorStrategy = new RGBColorStrategy(Color.BLACK);
 
-        colorFilter = new ColoredPointSearch(cam.getBufferedImage().getWidth(), cam.getBufferedImage().getHeight(), Color.BLACK);
+        colorFilter = new ColoredPointSearch(width, height, Color.BLACK);
         colorFilter.setBorder(95);
         colorFilter.setSelectionStrategy(colorStrategy);
 
@@ -152,7 +154,7 @@ public class AirWrite extends Application {
     @Override
     public void draw(Graphics g) {
 
-        BufferedImage b = cam.getBufferedImage();
+        BufferedImage b = cam.getImage();
 
         AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
 
@@ -182,9 +184,9 @@ public class AirWrite extends Application {
         for (Point2D point : points) {
 
             g.setColor(Color.WHITE);
-            g.fillCircle(xImage + (int) point.getX(), yImage + (int) point.getY(), 5);
+            g.fillCircle(xImage + (int) point.x, yImage + (int) point.y, 5);
             g.setColor(Color.BLACK);
-            g.drawCircle(xImage + (int) point.getX(), yImage + (int) point.getY(), 5);
+            g.drawCircle(xImage + (int) point.x, yImage + (int) point.y, 5);
 
         }
 

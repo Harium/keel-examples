@@ -1,15 +1,16 @@
 package examples.basic.hull;
 
-import com.harium.keel.awt.PolygonHelper;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.feature.hull.HullFeature;
-import com.harium.keel.modifier.hull.FastConvexHullModifier;
+import com.badlogic.gdx.math.Vector2;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-import com.harium.etyl.linear.Point2D;
+import com.harium.etyl.geometry.Point2D;
+import com.harium.keel.awt.PolygonHelper;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.feature.hull.HullFeature;
+import com.harium.keel.modifier.hull.FastConvexHullModifier;
 
 import java.awt.*;
 
@@ -66,8 +67,8 @@ public class QuickHullExampleApplication extends Application {
 
         g.setColor(Color.BLACK);
 
-        for (Point2D point : convexHull.asList()) {
-            g.drawCircle(point, 5);
+        for (Vector2 point : convexHull.asList()) {
+            g.drawCircle(point.x, point.y, 5);
         }
 
         g.setColor(Color.KHAKI);
@@ -86,7 +87,7 @@ public class QuickHullExampleApplication extends Application {
 
         if (event.isButtonUp(MouseEvent.MOUSE_BUTTON_RIGHT)) {
             //Compute the Convex Hull
-            convexHull = quickHullModifier.modify(component);
+            convexHull = quickHullModifier.apply(component);
         }
     }
 }

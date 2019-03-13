@@ -1,13 +1,5 @@
 package examples.misc;
 
-import com.harium.keel.awt.camera.Camera;
-import com.harium.keel.awt.camera.CameraV4L4J;
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
-import com.harium.keel.filter.validation.point.MinCountPoints;
-import com.harium.keel.filter.validation.point.MinDensityValidation;
-import com.harium.keel.filter.validation.point.MinDimensionValidation;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.context.UpdateIntervalListener;
 import com.harium.etyl.commons.event.KeyEvent;
@@ -15,8 +7,16 @@ import com.harium.etyl.commons.event.MouseEvent;
 import com.harium.etyl.commons.event.PointerEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
+import com.harium.etyl.geometry.Point2D;
 import com.harium.etyl.layer.ImageLayer;
-import com.harium.etyl.linear.Point2D;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.track.TrackingByMultipleColorFilter;
+import com.harium.keel.filter.validation.point.MinCountPoints;
+import com.harium.keel.filter.validation.point.MinDensityValidation;
+import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -51,7 +51,7 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
     @Override
     public void load() {
 
-        cam = new CameraV4L4J();
+        cam = new Webcam();
 
         loadingInfo = "Loading Images";
 
@@ -67,13 +67,13 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
 
     @Override
     public void timeUpdate(long now) {
-        reset(cam.getBufferedImage());
+        reset(cam.getImage());
     }
 
     private void configureSkinFilter() {
 
-        int width = cam.getBufferedImage().getWidth();
-        int height = cam.getBufferedImage().getHeight();
+        int width = cam.getWidth();
+        int height = cam.getHeight();
 
         skinFilter = new TrackingByMultipleColorFilter(width, height);
 
@@ -148,7 +148,7 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
             int y = event.getY();
 
 
-            BufferedImage buffer = cam.getBufferedImage();
+            BufferedImage buffer = cam.getImage();
 
             if (x < buffer.getWidth() && y < buffer.getHeight()) {
 
@@ -186,25 +186,23 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
     public void draw(Graphics g) {
 
         if (!hide) {
-            g.drawImage(cam.getBufferedImage(), xOffset, yOffset);
+            g.drawImage(cam.getImage(), xOffset, yOffset);
         }
 
         g.setColor(Color.BLUE);
         g.setAlpha(80);
 
-        g.setLineWidth(2);
+        //g.setLineWidth(2);
 
         for (PointFeature skin : skinFeatures) {
 
             g.setColor(Color.BLUE_VIOLET);
             g.drawRect(skin.getRectangle());
 
-            g.setLineWidth(1);
+            //g.setLineWidth(1);
 
             for (Point2D point : skin.getPoints()) {
-
-                g.fillRect((int) point.getX(), (int) point.getY(), 1, 1);
-
+                g.fillRect((int) point.x, (int) point.y, 1, 1);
             }
 
         }
@@ -265,14 +263,14 @@ public class FaceSkinFilter extends Application implements UpdateIntervalListene
         for (Point2D point : component.getPoints()) {
 
             //Point lower
-            if (point.getY() > component.getX() + component.getH() / 2) {
+            if (point.y > component.getX() + component.getH() / 2) {
                 lowerPoints++;
-                lowerX += point.getX();
-                lowerY += point.getY();
+                lowerX += point.x;
+                lowerY += point.y;
             } else {
                 upperPoints++;
-                upperX += point.getX();
-                upperY += point.getY();
+                upperX += point.x;
+                upperY += point.y;
             }
 
         }

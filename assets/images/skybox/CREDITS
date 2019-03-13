@@ -1,0 +1,19 @@
+https://opengameart.org/content/space-skyboxes
+
+Images
+0001.jpg -> Down
+0002.jpg -> Front
+0003.jpg -> Right
+0004.jpg -> Back
+0005.jpg -> Left
+0006.jpg -> Up
+
+
+Using cube2sphere
+https://github.com/Xyene/cube2sphere
+```
+sudo dnf install blender
+pip install cube2sphere
+```
+
+cube2sphere 0004.jpg 0002.jpg 0003.jpg 0005.jpg 0006.jpg 0001.jpg -r 2048 1024 -fPNG -o equi
