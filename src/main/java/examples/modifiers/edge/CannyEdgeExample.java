@@ -9,7 +9,7 @@ public class CannyEdgeExample extends Etyl {
 	private static final long serialVersionUID = 1L;
 
 	public CannyEdgeExample() {
-		super(640, 480);
+		super(512, 512+37);
 	}
 	
 	public static void main(String[] args) {
@@ -18,8 +18,6 @@ public class CannyEdgeExample extends Etyl {
 	}
 
 	public Application startApplication() {
-		initialSetup("../");
-		
 		return new CannyEdgeApplication(w,h);
 	}	
 
