@@ -9,14 +9,13 @@ import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.RGBColorStrategy;
-import com.harium.keel.filter.color.skin.SkinColorStrategy;
 import com.harium.keel.filter.search.CrossSearch;
 import com.harium.keel.filter.search.TriangularSearch;
+import com.harium.keel.filter.selection.RGBColorStrategy;
+import com.harium.keel.filter.selection.skin.SkinColorStrategy;
 import com.harium.keel.modifier.EnvelopeModifier;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
-
-import java.awt.*;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.List;
 

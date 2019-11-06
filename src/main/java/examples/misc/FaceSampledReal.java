@@ -10,11 +10,10 @@ import com.harium.keel.camera.Camera;
 import com.harium.keel.camera.Webcam;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.CrossSearch;
+import com.harium.keel.filter.selection.RGBColorStrategy;
 import com.harium.keel.modifier.hull.FastConvexHullModifier;
-
-import java.awt.*;
+import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;

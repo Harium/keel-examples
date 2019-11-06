@@ -13,9 +13,8 @@ import com.harium.keel.custom.gesture.GestureRegex;
 import com.harium.keel.custom.gesture.PolygonMatcher;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.ColoredPointSearch;
-
+import com.harium.keel.filter.selection.RGBColorStrategy;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;

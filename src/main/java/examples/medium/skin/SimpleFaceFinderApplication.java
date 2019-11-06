@@ -16,8 +16,8 @@ import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.ExpandableColorFilter;
 import com.harium.keel.filter.HardColorFilter;
 import com.harium.keel.filter.SkinColorFilter;
-import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
 import com.harium.keel.filter.process.AverageColorFilter;
+import com.harium.keel.filter.selection.skin.SkinColorKovacNewStrategy;
 import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
@@ -139,7 +139,7 @@ public class SimpleFaceFinderApplication extends Application {
         //validatePointFeatures();
         bestCandidate = evaluatePointFeature(skinPointFeatures);
 
-        Color faceColor = AverageColorFilter.filter(source, bestCandidate);
+        Color faceColor = new AverageColorFilter().filter(source, bestCandidate);
 
         ExpandableColorFilter featureFilter = new ExpandableColorFilter(w, h, faceColor, 30);
         //featureFilter.getSearchStrategy().setBorder(2);

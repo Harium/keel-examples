@@ -11,11 +11,10 @@ import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.core.strategy.ComponentModifierStrategy;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.CornerSearch;
+import com.harium.keel.filter.selection.RGBColorStrategy;
 import com.harium.keel.modifier.PositCoplanarModifier;
 import com.harium.keel.modifier.hull.AugmentedMarkerModifier;
-
 import java.awt.image.BufferedImage;
 
 public class AugmentedRealityStatic extends Application {

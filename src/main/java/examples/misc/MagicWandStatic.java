@@ -9,10 +9,9 @@ import com.harium.keel.awt.source.BufferedImageSource;
 import com.harium.keel.camera.FakeCamera;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.flood.FloodFillSearch;
+import com.harium.keel.filter.selection.RGBColorStrategy;
 import com.harium.keel.modifier.EnvelopeModifier;
-
 import java.awt.image.BufferedImage;
 import java.util.List;
 

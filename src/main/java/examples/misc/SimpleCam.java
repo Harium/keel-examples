@@ -11,8 +11,8 @@ import com.harium.keel.camera.Camera;
 import com.harium.keel.camera.Webcam;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.color.RGBColorStrategy;
 import com.harium.keel.filter.search.TriangularSearch;
+import com.harium.keel.filter.selection.RGBColorStrategy;
 
 public class SimpleCam extends Application {
 

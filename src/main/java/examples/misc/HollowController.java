@@ -1,17 +1,15 @@
 package examples.misc;
 
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.camera.Camera;
-import com.harium.keel.camera.Webcam;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.ColorPointFilter;
-import com.harium.keel.filter.RedLedFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.commons.context.UpdateIntervalListener;
 import com.harium.etyl.commons.event.KeyEvent;
 import com.harium.etyl.commons.graphics.Color;
 import com.harium.etyl.core.graphics.Graphics;
-
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.camera.Camera;
+import com.harium.keel.camera.Webcam;
+import com.harium.keel.feature.PointFeature;
+import com.harium.keel.filter.ColorPointFilter;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;

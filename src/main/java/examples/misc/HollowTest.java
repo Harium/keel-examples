@@ -1,13 +1,11 @@
 package examples.misc;
 
-import com.harium.keel.awt.source.BufferedImageSource;
-import com.harium.keel.feature.PointFeature;
-import com.harium.keel.filter.RedLedFilter;
 import com.harium.etyl.commons.context.Application;
 import com.harium.etyl.core.graphics.Graphics;
 import com.harium.etyl.loader.image.ImageLoader;
-
-import java.awt.*;
+import com.harium.keel.awt.source.BufferedImageSource;
+import com.harium.keel.feature.PointFeature;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.List;
 

@@ -15,7 +15,7 @@ import com.harium.keel.core.helper.ColorHelper;
 import com.harium.keel.feature.Feature;
 import com.harium.keel.feature.PointFeature;
 import com.harium.keel.filter.SkinColorFilter;
-import com.harium.keel.filter.color.skin.SkinColorKovacNewStrategy;
+import com.harium.keel.filter.selection.skin.SkinColorKovacNewStrategy;
 import com.harium.keel.filter.validation.point.MinDimensionValidation;
 
 import java.awt.image.BufferedImage;
